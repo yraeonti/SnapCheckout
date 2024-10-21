@@ -1,13 +1,11 @@
+import DashboardLayout from "@/components/dashboard/dashboard-layout";
+
 type props = {
   children: React.ReactNode;
 };
 
-const DashboardLayout = ({ children }: props) => {
-  return (
-    <>
-      <main className="">{children}</main>
-    </>
-  );
+const DashboardRootLayout = ({ children }: props) => {
+  return <DashboardLayout>{children}</DashboardLayout>;
 };
 
-export default DashboardLayout;
+export default DashboardRootLayout;
