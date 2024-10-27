@@ -3,44 +3,17 @@ import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 
-const SidebarItem = ({ item, pageName, setPageName }: any) => {
-  const [openDropdown, setOpenDropdown] = useState(false);
+const SidebarItem = ({ item }: any) => {
   const pathname = usePathname();
 
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    if (isActive) {
-      setOpenDropdown(true);
-    } else {
-      setOpenDropdown(false);
-    }
-  }, [isActive]);
-
-  useEffect(() => {
-    if (item.route == "/dashboard") {
-      setIsActive(pathname === item.route);
-    } else {
-      setIsActive(pathname.startsWith(item.route));
-    }
-  }, [pathname]);
-
-  const handleClick = () => {
-    if (item.children) {
-      setOpenDropdown(!openDropdown);
-    }
-
-    const updatedPageName =
-      pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
-    return setPageName(updatedPageName);
-  };
+  const isActive = pathname === item.route;
 
   return (
     <>
       <li>
         <Link
           href={item.route}
-          onClick={handleClick}
+          // onClick={handleClick}
           className={`${
             isActive
               ? "bg-black text-white"
