@@ -1,3 +1,6 @@
+"use client";
+import { CategoryForm } from "@/components/forms/category-form";
+import { FormModal } from "@/components/modals/form-modal";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,9 +9,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export function AddItemHeader() {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div className=" font-workSans">
       <h2 className="font-bold">Store</h2>
@@ -35,7 +42,23 @@ export function AddItemHeader() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+
+        <Button
+          className="bg-[#F3A847] text-black font-medium hover:bg-[#F3A847]/90"
+          onClick={() => setOpenModal(true)}
+        >
+          <PlusCircle />
+          Add Category
+        </Button>
       </div>
+
+      <FormModal
+        title="Add Item Category"
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      >
+        <CategoryForm closeModal={() => setOpenModal(false)} />
+      </FormModal>
     </div>
   );
 }

@@ -18,3 +18,7 @@ export const storeItemSchema = z.object({
     ),
   description: z.string(),
 });
+
+export const categorySchema = z.object({
+  category: z.string(),
+});

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { QueryProvider } from "@/providers/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Snap Checkout",
@@ -16,7 +18,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="font-workSans">{children}</body>
+        <body className="font-workSans">
+          <QueryProvider>
+            <Toaster />
+            {children}
+          </QueryProvider>
+        </body>
       </html>
     </ClerkProvider>
   );

@@ -18,8 +18,20 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { Trash2Icon, UploadIcon } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useGetCategories } from "@/hooks/mutations/category-mutations";
+import { useStoreMutation } from "@/hooks/mutations/store-mutations";
 
 export const ItemForm = ({ item }: { item?: IStore }) => {
+  const { data: categories, isLoading } = useGetCategories();
+  const { mutate, isPending } = useStoreMutation();
   const docRef = useRef<HTMLInputElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<File | undefined>();
   const form = useForm<z.infer<typeof storeItemSchema>>({
@@ -39,7 +51,29 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
     setSelectedDoc(undefined);
   };
 
-  const onSubmit = async (data: z.infer<typeof storeItemSchema>) => {};
+  const onSubmit = async (data: z.infer<typeof storeItemSchema>) => {
+    const formData = new FormData();
+
+    // Append all form fields to FormData
+    formData.append("item_name", data.item_name);
+    formData.append("description", data.description);
+    formData.append("item_price", data.item_price.toString());
+    formData.append("item_quantity", data.item_quantity.toString());
+    formData.append("category_id", data.category);
+
+    // Handle file upload
+    if (selectedDoc) {
+      formData.append("image", selectedDoc);
+    }
+
+    // If editing, append the ID
+    // if (item?.id) {
+    //   formData.append("id", item.id);
+    // }
+
+    // Send the FormData through the mutation
+    mutate(formData);
+  };
 
   return (
     <Form {...form}>
@@ -80,9 +114,8 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
                   <FormControl>
                     <Input
                       {...field}
-                      onChange={(e) => field.onChange(+e.target.value)}
                       name="1000"
-                      type="text"
+                      type="string"
                       className="w-full"
                       required
                       placeholder="Price"
@@ -134,32 +167,38 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
               )}
             />
 
-            {/* <FormField
+            <FormField
               control={form.control}
-              name="type"
+              name="category"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
                   <FormControl>
                     <div className="w-full space-y-1">
                       <Label htmlFor="type">
-                        Service Type
+                        Category
                         <span className="text-red">*</span>
                       </Label>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger id="type">
-                          <SelectValue placeholder="Select test type" />
+                        <SelectTrigger id="category">
+                          <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {serviceTypes.map((type, index) => {
-                            return (
-                              <SelectItem key={index} value={type.value}>
-                                {type.label}
+                          {isLoading ? (
+                            <p className="p-3 text-center">Loading...</p>
+                          ) : (
+                            categories?.length &&
+                            categories?.map((category) => (
+                              <SelectItem
+                                key={category?.id}
+                                value={category.id}
+                              >
+                                {category.category}
                               </SelectItem>
-                            );
-                          })}
+                            ))
+                          )}
                         </SelectContent>
                       </Select>
                     </div>
@@ -168,7 +207,6 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
                 </FormItem>
               )}
             />
-            */}
           </div>
           <div className="w-full p-4 border space-y-3 rounded-lg">
             <FormField
@@ -257,7 +295,9 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
         </div>
 
         <div className="mt-4 flex  justify-end">
-          <Button type="submit">{item ? "Update " : "Create"} Item</Button>
+          <Button disabled={isPending} type="submit">
+            {item ? "Update " : "Create"} Item
+          </Button>
         </div>
       </form>
     </Form>
