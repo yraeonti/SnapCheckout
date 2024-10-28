@@ -38,7 +38,9 @@ export async function POST(req: Request) {
 
     const item_name = form.get("item_name")?.toString();
     const category = form.get("category_id")?.toString();
-    const item_price = form.get("item_price")?.toString();
+    let item_price: string | number | undefined = form
+      .get("item_price")
+      ?.toString();
     const description = form.get("description")?.toString();
     const image = form.get("image") as Blob | null;
     let item_quantity: string | number | undefined = form
@@ -65,11 +67,25 @@ export async function POST(req: Request) {
 
     item_quantity = Number(item_quantity);
 
+    item_price = Number(item_price);
+
     if (typeof item_quantity !== "number" || item_quantity < 0) {
       return Response.json(
         {
           status: false,
           message: "item_quantity should be a number, 0 and above",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (typeof item_price !== "number") {
+      return Response.json(
+        {
+          status: false,
+          message: "item_price is not a valid number",
         },
         {
           status: 400,
@@ -156,6 +172,9 @@ export async function GET(req: Request) {
             category: true,
           },
         },
+      },
+      orderBy: {
+        created_at: "desc",
       },
     });
 

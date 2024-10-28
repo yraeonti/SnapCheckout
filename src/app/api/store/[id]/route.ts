@@ -48,7 +48,9 @@ export async function PATCH(
 
     const item_name = form.get("item_name")?.toString();
     const category = form.get("category_id")?.toString();
-    const item_price = form.get("item_price")?.toString();
+    let item_price: string | number | undefined = form
+      .get("item_price")
+      ?.toString();
     const description = form.get("description")?.toString();
     const image = form.get("image") as Blob | null;
     let item_quantity: string | number | undefined = form
@@ -57,8 +59,38 @@ export async function PATCH(
 
     if (item_quantity) {
       item_quantity = Number(item_quantity);
+
+      if (typeof item_quantity !== "number") {
+        return Response.json(
+          {
+            status: false,
+            message: "item_price is not a valid number",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
     } else {
       item_quantity = undefined;
+    }
+
+    if (item_price) {
+      item_price = Number(item_price);
+
+      if (typeof item_price !== "number") {
+        return Response.json(
+          {
+            status: false,
+            message: "item_price is not a valid number",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+    } else {
+      item_price = undefined;
     }
 
     const options = {

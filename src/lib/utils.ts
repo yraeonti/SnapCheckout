@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import mime from "mime";
+import crypto from "crypto";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,6 +18,22 @@ export const getImageUrl = async (file: Blob | null) => {
   }
   return null;
 };
+
+export function generateHash(
+  email: string,
+  userId: string,
+  timestamp: Date,
+  length = 32
+) {
+  // Concatenate inputs into a single string
+  const input = `${email}:${userId}:${timestamp.toISOString()}`;
+
+  // Generate a SHA-256 hash of the input
+  const hash = crypto.createHash("sha256").update(input).digest("hex");
+
+  // Return a fixed-length substring of the hash (between 8 and 20 characters)
+  return { hash, short_hash: hash.slice(0, length) };
+}
 
 export const cloudinary_options = {
   folder: "snap-checkout",

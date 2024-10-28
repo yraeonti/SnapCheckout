@@ -16,9 +16,13 @@ datasource db {
 model Store {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   item_name String
+
   category Category @relation(fields: [category_id], references: [id], onDelete: NoAction)
   category_id String @db.ObjectId
-  item_price String
+
+  checkoutItem CheckoutItems[]
+
+  item_price Int
   item_quantity Int
   description String
   image String
@@ -34,6 +38,64 @@ model Category {
 
     store Store[]
 
+    user_id String 
+
     created_at   DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
+}
+
+model Client {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    email String
+
+    phone String?
+    name String?
+
+    link String @unique
+
+    short_link String @unique
+    user_id String 
+
+    checkout Checkout?
+
+    created_at   DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+}
+
+model CheckoutItems {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  item_name String
+  image String
+  item_price Int
+  quantity Int
+
+  product Store @relation(fields: [product_id], references: [id], onDelete: NoAction) 
+  product_id String @db.ObjectId
+  
+  paid Boolean @default(false)
+
+  checkout Checkout @relation(fields: [checkout_id], references: [id])
+  checkout_id String @db.ObjectId
+
+  created_at   DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Checkout {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  items CheckoutItems[]
+
+  client Client @relation(fields: [client_id], references: [id])
+  client_id String @db.ObjectId @unique
+
+  user_id String
+
+  discount Int @default(0)
+  delivery Int @default(0)
+
+  created_at   DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }

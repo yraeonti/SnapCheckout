@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     await db.category.create({
       data: {
         category,
+        user_id: userId,
       },
     });
 
@@ -57,8 +58,25 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return Response.json(
+      {
+        status: false,
+        message: "User not authenticated",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
   try {
-    const data = await db.category.findMany();
+    const data = await db.category.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
 
     return Response.json({
       status: true,

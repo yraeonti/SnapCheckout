@@ -59,6 +59,15 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        translate: {
+          "0%, 100%": { transform: "translateX(-1.4rem)" },
+          "50%": { transform: "translateX(0)" },
+        },
+      },
+      animation: {
+        translate: "translate 2.3s ease-in-out infinite;",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
