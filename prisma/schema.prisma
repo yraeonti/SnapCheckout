@@ -63,6 +63,13 @@ model Client {
     updatedAt  DateTime   @updatedAt
 }
 
+enum PAYMENT_STATUS {
+  PENDING
+  ONGOING
+  COMPLETED
+  FAILED
+}
+
 model CheckoutItems {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -71,9 +78,9 @@ model CheckoutItems {
   item_price Int
   quantity Int
 
-  product Store @relation(fields: [product_id], references: [id], onDelete: NoAction) 
+  product Store @relation(fields: [product_id], references: [id]) 
   product_id String @db.ObjectId
-  
+
   paid Boolean @default(false)
 
   checkout Checkout @relation(fields: [checkout_id], references: [id])
@@ -95,6 +102,8 @@ model Checkout {
 
   discount Int @default(0)
   delivery Int @default(0)
+
+  payment_status PAYMENT_STATUS @default(PENDING)
 
   created_at   DateTime   @default(now())
   updatedAt  DateTime   @updatedAt

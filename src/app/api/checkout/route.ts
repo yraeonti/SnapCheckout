@@ -106,6 +106,16 @@ export async function POST(req: Request) {
         },
       }),
 
+      db.checkout.update({
+        where: {
+          user_id: userId,
+          client_id,
+        },
+        data: {
+          payment_status: "PENDING",
+        },
+      }),
+
       db.checkoutItems.create({
         data: {
           ...options,
