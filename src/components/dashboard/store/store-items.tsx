@@ -10,8 +10,8 @@ export function StoreItems() {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-3 md:grid-rows-3 sm:grid-cols-2 lg:grid-cols-4 my-3">
-        <Skeleton className="max-w-sm bg-gray-400 rounded-3xl p-3 h-40" />
-        <Skeleton className="max-w-sm bg-gray-400 rounded-3xl p-3 h-40" />
+        <Skeleton className="max-w-sm bg-gray-100 rounded-3xl p-3 h-40" />
+        <Skeleton className="max-w-sm bg-gray-100 rounded-3xl p-3 h-40" />
       </div>
     );
   }

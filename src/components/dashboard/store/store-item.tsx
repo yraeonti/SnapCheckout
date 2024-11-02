@@ -12,7 +12,7 @@ export function StoreItem({ item }: StoreItemProps) {
     <Card className="max-w-sm bg-white rounded-3xl p-3 shadow-sm font-workSans">
       <div className="rounded-2xl overflow-hidden bg-gray-50 mb-3">
         <Image
-          src={item.image}
+          src={item?.image ?? ""}
           alt={item.item_name}
           className="w-full aspect-square object-cover"
           width={250}

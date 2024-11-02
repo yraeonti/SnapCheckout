@@ -1,4 +1,5 @@
 import { allowedFileTypes } from "@/static/static";
+
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -21,4 +22,9 @@ export const storeItemSchema = z.object({
 
 export const categorySchema = z.object({
   category: z.string(),
+});
+export const clientSchema = z.object({
+  email: z.string().email(),
+  name: z.string(),
+  phone: z.string(),
 });

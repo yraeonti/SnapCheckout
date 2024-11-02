@@ -39,3 +39,14 @@ export const cloudinary_options = {
   folder: "snap-checkout",
   use_asset_folder_as_public_id_prefix: false,
 };
+
+export const formatAmount = (amount: number): string => {
+  const positiveAmount = Math.abs(amount);
+
+  const formatter = new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+  });
+
+  return formatter.format(positiveAmount);
+};
