@@ -26,8 +26,6 @@ interface CategoryFormProps {
 
 export const CategoryForm = ({ closeModal }: CategoryFormProps) => {
   const { mutateAsync, isPending } = useCategoryMutation();
-  const docRef = useRef<HTMLInputElement>(null);
-  const [selectedDoc, setSelectedDoc] = useState<File | undefined>();
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
     mode: "onChange",

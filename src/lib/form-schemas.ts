@@ -28,3 +28,9 @@ export const clientSchema = z.object({
   name: z.string(),
   phone: z.string(),
 });
+
+export const checkoutItemSchema = z.object({
+  client_id: z.string(),
+  product_id: z.string(),
+  quantity: z.number(),
+});

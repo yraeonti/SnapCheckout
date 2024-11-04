@@ -25,3 +25,20 @@ export const updateClient = async (id?: string, data?: ClientPayload) => {
 
   return response;
 };
+
+export const deleteClient = async (id?: string): Promise<any> => {
+  const response = await axios.delete(`/api/client/${id}`);
+
+  return response;
+};
+
+export type CheckoutItemPayload = {
+  product_id: string;
+  client_id: string;
+  quantity: number;
+};
+
+export const addCheckoutItem = async (data: CheckoutItemPayload) => {
+  const response = await axios.post(`/api/checkout/`, data);
+  return response;
+};

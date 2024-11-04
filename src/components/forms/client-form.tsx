@@ -16,12 +16,12 @@ import { Button } from "@/components/ui/button";
 import { IClient } from "@/types/client.dto";
 import { useClientMutation } from "@/hooks/mutations/clients-mutations";
 
-interface CategoryFormProps {
+interface ClientFormProps {
   closeModal: () => void;
   client?: IClient;
 }
 
-export const ClientForm = ({ closeModal, client }: CategoryFormProps) => {
+export const ClientForm = ({ closeModal, client }: ClientFormProps) => {
   const { mutate, isPending } = useClientMutation(client?.id, closeModal);
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),

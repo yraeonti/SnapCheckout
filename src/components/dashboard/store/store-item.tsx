@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { formatAmount } from "@/lib/utils";
 import { IStore } from "@/types/store.dto";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
@@ -30,27 +31,12 @@ export function StoreItem({ item }: StoreItemProps) {
           </Button>
         </div>
 
-        <p className="text-lg font-medium">${item.item_price}</p>
-
-        {/* <div className="flex items-center justify-between pt-1">
-          <span className="text-sm font-medium text-gray-900">
-            {item.status}
-          </span>
-
-          {item.inventory && (
-            <div className="flex items-center gap-2">
-              <div className="w-20 h-1.5 bg-green-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-green-500 rounded-full"
-                  style={{ width: `${(item.inventory / 100) * 100}%` }}
-                />
-              </div>
-              <span className="text-sm text-gray-600">
-                {item.inventory} items
-              </span>
-            </div>
-          )}
-        </div> */}
+        <div className="flex items-center justify-between pt-1">
+          <p className="text-lg font-medium">
+            NGN {formatAmount(Number(item.item_price))}
+          </p>
+          <span className="text-sm">Quantity: {item.item_quantity}</span>
+        </div>
       </div>
     </Card>
   );

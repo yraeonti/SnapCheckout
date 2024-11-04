@@ -1,5 +1,5 @@
 export interface IStore {
-  id?: string | number;
+  id?: string;
   item_name: string;
   category: string;
   item_price: string;
