@@ -19,8 +19,6 @@ export async function POST(req: Request) {
   try {
     const { checkout_items, checkout_id, tx_reference } = await req.json();
 
-    console.log("user id", userId);
-
     if (!checkout_id) {
       return Response.json(
         {
