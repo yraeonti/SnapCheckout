@@ -76,6 +76,7 @@ model CheckoutItems {
   item_name String
   image String
   item_price Int
+  description String?
   quantity Int
 
   product Store @relation(fields: [product_id], references: [id]) 
@@ -105,6 +106,45 @@ model Checkout {
 
   payment_status PAYMENT_STATUS @default(PENDING)
 
+  created_at   DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+enum ORDER_STATUS {
+    PENDING
+    ONGOING
+    COMPLETED
+    FAILED
+}
+
+type OrderItems {
+  checkout_item_id String @db.ObjectId
+}
+
+model Order {
+ id String @id @default(auto()) @map("_id") @db.ObjectId
+
+ order_items OrderItems[]
+
+ status ORDER_STATUS @default(PENDING)
+
+ user_id String
+
+ created_at   DateTime   @default(now())
+ updatedAt  DateTime   @updatedAt
+}
+
+
+model Insights {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  exp Int
+  part_text String
+  
+  last_message String?
+  last_response String?
+
+  user_id String @unique
   created_at   DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }

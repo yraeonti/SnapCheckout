@@ -8,12 +8,16 @@ const SidebarItem = ({ item }: any) => {
 
   const isActive = pathname === item.route;
 
+  const handleClick = () => {
+    fetch("/api/gemini/start");
+  };
+
   return (
     <>
       <li>
         <Link
           href={item.route}
-          // onClick={handleClick}
+          onClick={() => (item.label == "Insights" ? handleClick() : {})}
           className={`${
             isActive
               ? "bg-black text-white"

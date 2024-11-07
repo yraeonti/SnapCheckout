@@ -55,7 +55,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
   const router = useRouter();
 
   const payazaCheckout = new Payaza({
-    merchant_key: "PZ78-PKTEST-C1B09A12-19A5-4E15-88FA-A718A3469E9D",
+    merchant_key: "PZ78-PKTEST-E1F4A882-BB27-4979-AB4E-DE2459FF9B98",
     connection_mode: ConnectionMode.TEST, // Live || Test
     checkout_amount: total,
     currency_code: "NGN",
@@ -63,7 +63,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
     first_name: data.name || "Snap",
     last_name: data.name || "Checkout",
     phone_number: data.phone || "+2348162479362",
-    transaction_reference: "tuama",
+    transaction_reference: `${data.email}T${Date.now()}`,
     currency: "NGN",
     //Additional Details (metadata)
     additional_details: {
@@ -81,7 +81,11 @@ export default function CheckoutUI({ data }: { data: Items }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ checkout_id: data.checkout?.id }),
+          body: JSON.stringify({
+            checkout_id: data.checkout?.id,
+            items: items?.map((it) => it.id) || [],
+            reference_p: callbackResponse.data.payaza_reference,
+          }),
         });
 
         if (res.ok) {
@@ -92,11 +96,11 @@ export default function CheckoutUI({ data }: { data: Items }) {
   });
 
   return (
-    <div className="flex-1 h-full bg-[#F5F5F5] sm:px-10 px-4 pb-10">
-      <h1 className="text-base text-[#F3A847] py-7">Checkout</h1>
+    <div className="">
+      <h1 className="text-base text-[#F3A847] py-4">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="px-6 py-6 rounded-lg bg-white w-full">
+        <div className="px-6 py-6 rounded-lg bg-white w-full h-fit">
           <div className="flex gap-4 items-center text-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -166,11 +170,11 @@ export default function CheckoutUI({ data }: { data: Items }) {
                 </div>
               )}
 
-              {data.name && (
+              {/* {data.phone && (
                 <div className="flex items-center gap-2 truncate whitespace-nowrap">
                   <p>Phone Number:</p> <p>{data.phone}</p>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -186,41 +190,43 @@ export default function CheckoutUI({ data }: { data: Items }) {
           <Separator className="my-5" />
 
           <div className="mt-10">
-            <div
-              onClick={() =>
-                status === "PENDING" || status === "FAILED"
-                  ? payazaCheckout.showPopup()
-                  : {}
-              }
-              className={cn(
-                "flex items-center py-2 text-center px-2 rounded-e-lg rounded-s-lg text-white cursor-pointer",
-                status === "PENDING" || status === "FAILED"
-                  ? "bg-black"
-                  : "bg-green-600"
-              )}
-            >
-              <p className="mx-auto font-medium">
-                {status === "PENDING" || status === "FAILED"
-                  ? "Continue to Payment"
-                  : "Payment Successful"}
-              </p>
+            {items && items?.length > 0 && (
+              <button
+                onClick={() =>
+                  status === "PENDING" || status === "FAILED"
+                    ? payazaCheckout.showPopup()
+                    : {}
+                }
+                className={cn(
+                  "flex items-center py-2 text-center px-2 rounded-e-lg rounded-s-lg text-white cursor-pointer w-full",
+                  status === "PENDING" || status === "FAILED"
+                    ? "bg-black"
+                    : "bg-green-600"
+                )}
+              >
+                <p className="mx-auto font-medium">
+                  {status === "PENDING" || status === "FAILED"
+                    ? "Continue to Payment"
+                    : "Payment Successful"}
+                </p>
 
-              {status === "PENDING" ||
-                (status === "FAILED" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="size-8 animate-translate"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ))}
-            </div>
+                {status === "PENDING" ||
+                  (status === "FAILED" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="size-8 animate-translate"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ))}
+              </button>
+            )}
           </div>
         </div>
 
@@ -238,8 +244,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
               </TableHeader>
 
               <TableBody>
-                {items &&
-                  items.length > 0 &&
+                {items && items.length > 0 ? (
                   items.map((it, i) => {
                     return (
                       <TableRow key={i}>
@@ -261,7 +266,14 @@ export default function CheckoutUI({ data }: { data: Items }) {
                         </TableCell>
                       </TableRow>
                     );
-                  })}
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center text-lg">
+                      No Checkout Items
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>

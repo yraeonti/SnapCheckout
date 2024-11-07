@@ -1,6 +1,7 @@
 import CheckoutUI from "@/components/checkout-ui";
 import { db } from "@/lib/db";
 import Image from "next/image";
+import RecommendedProducts from "@/components/recomended-products";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -22,8 +23,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
     },
   });
 
-  console.log("client data", data);
-
   if (!data) {
     return <div>No data found {slug}</div>;
   }
@@ -31,8 +30,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
   // return <div>{JSON.stringify(data, null, 2)}</div>;
 
   return (
-    <main className="flex flex-col h-full">
-      <header className="flex justify-between items-center sm:px-10 px-4 py-6">
+    <main className="flex flex-col min-h-full bg-[#F5F5F5]">
+      <header className="flex justify-between items-center sm:px-10 px-4 py-6 bg-white">
         <div className="sm:hidden"></div>
         <div className="relative h-16 w-24 hidden sm:block">
           <Image src={"/logo-dark.svg"} alt="Snap Checkout" fill />
@@ -55,7 +54,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
       </header>
 
-      <CheckoutUI data={data} />
+      <section className="sm:px-10 px-4 pb-10 mb-10">
+        <CheckoutUI data={data} />
+
+        <section className="mt-10 relative">
+          <RecommendedProducts slug={slug} />
+        </section>
+      </section>
     </main>
   );
 }

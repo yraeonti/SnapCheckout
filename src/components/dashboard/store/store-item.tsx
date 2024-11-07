@@ -7,8 +7,9 @@ import Image from "next/image";
 
 interface StoreItemProps {
   item: IStore;
+  recommend?: boolean;
 }
-export function StoreItem({ item }: StoreItemProps) {
+export function StoreItem({ item, recommend }: StoreItemProps) {
   return (
     <Card className="max-w-sm bg-white rounded-3xl p-3 shadow-sm font-workSans">
       <div className="rounded-2xl overflow-hidden bg-gray-50 mb-3">
@@ -26,16 +27,20 @@ export function StoreItem({ item }: StoreItemProps) {
           <h3 className="capitalize font-normal text-gray-900/50">
             {item.item_name}
           </h3>
-          <Button variant="outline" size="icon" className="h-8 w-8 -mr-2">
-            <MoreVertical className="h-5 w-5 text-gray-500" />
-          </Button>
+          {!recommend && (
+            <Button variant="outline" size="icon" className="h-8 w-8 -mr-2">
+              <MoreVertical className="h-5 w-5 text-gray-500" />
+            </Button>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-1">
-          <p className="text-lg font-medium">
+          <p className="text-sm font-medium">
             NGN {formatAmount(Number(item.item_price))}
           </p>
-          <span className="text-sm">Quantity: {item.item_quantity}</span>
+          {item?.item_quantity && (
+            <span className="text-sm">Quantity: {item.item_quantity}</span>
+          )}
         </div>
       </div>
     </Card>

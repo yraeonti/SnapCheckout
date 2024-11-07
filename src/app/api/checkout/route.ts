@@ -90,6 +90,7 @@ export async function POST(req: Request) {
       item_name: product.item_name,
       image: product.image,
       item_price: product.item_price,
+      description: product.description,
       quantity,
     };
 

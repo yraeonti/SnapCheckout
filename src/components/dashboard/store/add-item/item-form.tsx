@@ -239,7 +239,7 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
                           </Button>
                         </div>
                         <p className="text-neutral-400">
-                          Supported formats are JPG and PNG
+                          Supported formats are JPG, WEBP and PNG
                         </p>
 
                         <input
@@ -247,7 +247,7 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
                           ref={docRef}
                           {...fieldProps}
                           className="hidden"
-                          accept=".png, .jpg, .jpeg,"
+                          accept=".png, .jpg, .jpeg, .webp"
                           onChange={(e) => {
                             if (e.target.files) {
                               setSelectedDoc(e.target.files[0]);
