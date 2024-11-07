@@ -83,8 +83,8 @@ export default function CheckoutUI({ data }: { data: Items }) {
           },
           body: JSON.stringify({
             checkout_id: data.checkout?.id,
-            items: items?.map((it) => it.id) || [],
-            reference_p: callbackResponse.data.payaza_reference,
+            items: items?.map((it) => ({ id: it.id })) || [],
+            tx_reference: callbackResponse.data.payaza_reference,
           }),
         });
 

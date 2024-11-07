@@ -2,9 +2,43 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { checkout_id, items } = await req.json();
+    const { checkout_id, items, tx_reference } = await req.json();
 
-    console.log("items", items);
+    if (!Array.isArray(items)) {
+      return Response.json(
+        {
+          status: false,
+          message: "items is an array of checkout items",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!(items.length > 0)) {
+      return Response.json(
+        {
+          status: false,
+          message: "items cannot be empty",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!tx_reference) {
+      return Response.json(
+        {
+          status: false,
+          message: "tx_reference is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     await db.$transaction([
       db.checkout.update({
@@ -17,7 +51,11 @@ export async function POST(req: Request) {
       }),
       db.order.create({
         data: {
-          order_items: items,
+          checkout_items: {
+            connect: items,
+          },
+          tx_reference,
+          checkout_id: checkout_id,
         },
       }),
     ]);

@@ -17,9 +17,23 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const { order_items } = await req.json();
+    const { checkout_items, checkout_id, tx_reference } = await req.json();
 
-    if (!Array.isArray(order_items)) {
+    console.log("user id", userId);
+
+    if (!checkout_id) {
+      return Response.json(
+        {
+          status: false,
+          message: "checkout_id is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!Array.isArray(checkout_items)) {
       return Response.json(
         {
           status: false,
@@ -31,10 +45,37 @@ export async function POST(req: Request) {
       );
     }
 
-    await db.order.create({
+    if (!(checkout_items.length > 0)) {
+      return Response.json(
+        {
+          status: false,
+          message: "order_items cannot be empty",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!tx_reference) {
+      return Response.json(
+        {
+          status: false,
+          message: "tx_reference is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const order = await db.order.create({
       data: {
-        order_items,
-        user_id: userId,
+        checkout_id,
+        tx_reference,
+        checkout_items: {
+          connect: checkout_items,
+        },
       },
     });
 
@@ -74,19 +115,12 @@ export async function GET(req: Request) {
   try {
     const data = await db.order.findMany({
       where: {
-        user_id: userId,
-      },
-      select: {
-        id: true,
-        status: true,
-        user_id: true,
-        order_items: {
-          select: {
-            checkout_item_id: true,
-          },
+        checkout: {
+          user_id: userId,
         },
-        created_at: true,
-        updatedAt: true,
+      },
+      include: {
+        checkout_items: true,
       },
     });
 
@@ -158,7 +192,6 @@ export async function PATCH(req: Request) {
     await db.order.update({
       where: {
         id: order_id,
-        user_id: userId,
       },
       data: {
         status,
