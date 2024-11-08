@@ -40,8 +40,8 @@ export async function POST(req: Request) {
       );
     }
 
-    await db.$transaction([
-      db.order.create({
+    await db.$transaction(async (tx) => {
+      await tx.order.create({
         data: {
           checkout_items: {
             connect: items,
@@ -49,8 +49,9 @@ export async function POST(req: Request) {
           tx_reference,
           checkout_id: checkout_id,
         },
-      }),
-      db.checkout.update({
+      });
+
+      await tx.checkout.update({
         where: {
           id: checkout_id,
         },
@@ -67,8 +68,8 @@ export async function POST(req: Request) {
             },
           },
         },
-      }),
-    ]);
+      });
+    });
 
     return new Response("ok");
   } catch (error) {

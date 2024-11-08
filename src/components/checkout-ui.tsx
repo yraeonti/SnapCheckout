@@ -63,7 +63,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
     first_name: data.name || "Snap",
     last_name: data.name || "Checkout",
     phone_number: data.phone || "+2348162479362",
-    transaction_reference: `${data.email}T${Date.now()}`,
+    transaction_reference: `${data.checkout?.id}T${Date.now()}`,
     currency: "NGN",
     //Additional Details (metadata)
     additional_details: {

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { NextRequest } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -16,6 +17,8 @@ export async function POST(req: Request) {
         },
       });
 
+      const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
+
       await db.order.update({
         where: {
           tx_reference,
@@ -23,8 +26,7 @@ export async function POST(req: Request) {
         data: {
           checkout: {
             update: {
-              payment_status:
-                checkout_items_count > 0 ? "COMPLETED" : "PENDING",
+              payment_status: payment_status,
             },
           },
           checkout_items: {
@@ -56,3 +58,51 @@ export async function POST(req: Request) {
     );
   }
 }
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     const query = req.nextUrl.searchParams;
+
+//     const ref = query.get("tx_reference")?.toString();
+//     const id = query.get("id")?.toString();
+
+//     if (!ref && !id) {
+//       return new Response("ok");
+//     }
+
+//     // const data = await db.order.update({
+//     //   where: {
+//     //     tx_reference: ref,
+//     //   },
+//     //   data: {
+//     //     tx_reference: ref
+//     //   }
+//     // });
+
+//     const data = await db.order.findMany({
+//       where: {
+//         tx_reference: ref,
+//       },
+//       include: {
+//         checkout: true,
+//       },
+//     });
+
+//     return Response.json({
+//       status: true,
+//       data,
+//     });
+//   } catch (error) {
+//     console.log(error);
+
+//     return Response.json(
+//       {
+//         status: false,
+//         message: "Something went wrong",
+//       },
+//       {
+//         status: 500,
+//       }
+//     );
+//   }
+// }
