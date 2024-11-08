@@ -1,4 +1,5 @@
 import { allowedFileTypes } from "@/static/static";
+import { ORDER_STATUS } from "@prisma/client";
 
 import { z } from "zod";
 
@@ -33,4 +34,9 @@ export const checkoutItemSchema = z.object({
   client_id: z.string(),
   product_id: z.string(),
   quantity: z.number(),
+});
+
+export const orderStatusSchema = z.object({
+  order_id: z.string(),
+  status: z.enum(["PENDING", "ONGOING", "COMPLETED", "FAILED"]),
 });

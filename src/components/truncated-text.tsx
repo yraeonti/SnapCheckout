@@ -3,15 +3,16 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 
 const TruncatedTextCell = ({ text }: { text?: string }) => {
+  const url = `${window.location.origin}/checkout/${text}`;
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(text || "");
-    toast.success(`${text} copied to clipboard`);
+    navigator.clipboard.writeText(url || "");
+    toast.success(`${url} copied to clipboard`);
   };
 
   return (
     <div className="flex items-center w-fit gap-2 group">
       <div className="truncate w-[30%]">
-        <span>{text}</span>
+        <span>{url}</span>
       </div>
       <Button
         variant={"ghost"}

@@ -1,9 +1,18 @@
 import { ICheckoutItems } from "@/types/client.dto";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { Card } from "@/components/ui/card";
 
 import Image from "next/image";
 import { formatAmount } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const CheckoutItemDetails = ({
   items,
@@ -15,13 +24,54 @@ export const CheckoutItemDetails = ({
   return (
     <>
       <div className="max-h-[600px] w-full overflow-y-auto">
-        <section className="p-2 bg-white w-full grid grid-cols-1 gap-3  lg:grid-cols-2 my-3">
-          {items?.length ? (
-            items.map((item) => <CheckoutItem item={item} key={item.id} />)
-          ) : (
-            <div className="text-center text-gray-400">No items found.</div>
-          )}
-        </section>
+        <div className="space-y-3">
+          <div className="px-6 py-6 rounded-lg bg-white w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className=" lg:w-[150px] w-[180px]">
+                    Item Name
+                  </TableHead>
+                  <TableHead className="text-center">Quantity</TableHead>
+                  <TableHead className="text-center">Price</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {items && items.length > 0 ? (
+                  items.map((it, i) => {
+                    return (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={it.image} />
+                            <AvatarFallback>P</AvatarFallback>
+                          </Avatar>
+
+                          <p className="overflow-hidden truncate">
+                            {it.item_name}
+                          </p>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {it.quantity}
+                        </TableCell>
+                        <TableCell className="text-center text-sm whitespace-nowrap">
+                          N {`${it.item_price}`}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center text-lg">
+                      No Checkout Items
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
         <div className="text-right p-4">
           <p className="font-bold">Total: NGN {formatAmount(totalPrice)}</p>
         </div>
