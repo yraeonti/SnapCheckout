@@ -41,14 +41,6 @@ export async function POST(req: Request) {
     }
 
     await db.$transaction([
-      db.checkout.update({
-        where: {
-          id: checkout_id,
-        },
-        data: {
-          payment_status: "ONGOING",
-        },
-      }),
       db.order.create({
         data: {
           checkout_items: {
@@ -56,6 +48,24 @@ export async function POST(req: Request) {
           },
           tx_reference,
           checkout_id: checkout_id,
+        },
+      }),
+      db.checkout.update({
+        where: {
+          id: checkout_id,
+        },
+        data: {
+          payment_status: "ONGOING",
+          items: {
+            updateMany: {
+              where: {
+                id: { in: items.map((it) => it.id) },
+              },
+              data: {
+                tx_reference,
+              },
+            },
+          },
         },
       }),
     ]);

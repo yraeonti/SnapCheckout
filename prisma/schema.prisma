@@ -90,6 +90,8 @@ model CheckoutItems {
   checkout Checkout @relation(fields: [checkout_id], references: [id])
   checkout_id String @db.ObjectId
 
+  tx_reference String?
+
   created_at   DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
@@ -136,7 +138,7 @@ model Order {
  checkout Checkout @relation(fields: [checkout_id], references: [id])
  checkout_id String @db.ObjectId
 
- tx_reference String
+ tx_reference String @unique
 
  created_at   DateTime   @default(now())
  updatedAt  DateTime   @updatedAt
