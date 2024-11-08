@@ -59,50 +59,84 @@ export async function POST(req: Request) {
   }
 }
 
-// export async function GET(req: NextRequest) {
-//   try {
-//     const query = req.nextUrl.searchParams;
+export async function GET(req: NextRequest) {
+  try {
+    const query = req.nextUrl.searchParams;
 
-//     const ref = query.get("tx_reference")?.toString();
-//     const id = query.get("id")?.toString();
+    const ref = query.get("tx_reference")?.toString();
+    const id = query.get("id")?.toString();
 
-//     if (!ref && !id) {
-//       return new Response("ok");
-//     }
+    if (!ref) {
+      return new Response("ok");
+    }
 
-//     // const data = await db.order.update({
-//     //   where: {
-//     //     tx_reference: ref,
-//     //   },
-//     //   data: {
-//     //     tx_reference: ref
-//     //   }
-//     // });
+    // const data = await db.order.update({
+    //   where: {
+    //     tx_reference: ref,
+    //   },
+    //   data: {
+    //     tx_reference: ref
+    //   }
+    // });
 
-//     const data = await db.order.findMany({
-//       where: {
-//         tx_reference: ref,
-//       },
-//       include: {
-//         checkout: true,
-//       },
-//     });
+    // const data = await db.order.findMany({
+    //   where: {
+    //     tx_reference: ref,
+    //   },
+    //   include: {
+    //     checkout: true,
+    //   },
+    // });
 
-//     return Response.json({
-//       status: true,
-//       data,
-//     });
-//   } catch (error) {
-//     console.log(error);
+    const tx_reference = ref;
 
-//     return Response.json(
-//       {
-//         status: false,
-//         message: "Something went wrong",
-//       },
-//       {
-//         status: 500,
-//       }
-//     );
-//   }
-// }
+    const checkout_items_count = await db.checkoutItems.count({
+      where: {
+        tx_reference: { not: tx_reference },
+        paid: false,
+      },
+    });
+
+    const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
+
+    const data = await db.order.update({
+      where: {
+        tx_reference,
+      },
+      data: {
+        checkout: {
+          update: {
+            payment_status: payment_status,
+          },
+        },
+        checkout_items: {
+          updateMany: {
+            where: {
+              tx_reference,
+            },
+            data: {
+              paid: true,
+            },
+          },
+        },
+      },
+    });
+
+    return Response.json({
+      status: true,
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return Response.json(
+      {
+        status: false,
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
