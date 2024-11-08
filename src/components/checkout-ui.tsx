@@ -78,8 +78,6 @@ export default function CheckoutUI({ data }: { data: Items }) {
       console.log("callbackResponse", callbackResponse);
 
       if (callbackResponse.type === "success") {
-        setCallbackSend((prev) => prev + 1);
-
         if (callbackSend > 0) {
           return;
         }
@@ -98,6 +96,8 @@ export default function CheckoutUI({ data }: { data: Items }) {
         if (res.ok) {
           router.refresh();
         }
+
+        setCallbackSend((prev) => prev + 1);
       }
     },
   });
