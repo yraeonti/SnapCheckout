@@ -24,28 +24,30 @@ export async function POST(req: Request) {
       const payment_status =
         checkout_items_count === 0 ? "COMPLETED" : "PENDING";
 
-      await db.order.update({
-        where: {
-          tx_reference,
-        },
-        data: {
-          checkout: {
-            update: {
-              payment_status: payment_status,
-            },
+      setTimeout(async () => {
+        await db.order.update({
+          where: {
+            tx_reference,
           },
-          checkout_items: {
-            updateMany: {
-              where: {
-                tx_reference,
-              },
-              data: {
-                paid: true,
+          data: {
+            checkout: {
+              update: {
+                payment_status: payment_status,
               },
             },
+            checkout_items: {
+              updateMany: {
+                where: {
+                  tx_reference,
+                },
+                data: {
+                  paid: true,
+                },
+              },
+            },
           },
-        },
-      });
+        });
+      }, 5000);
     }
 
     return new Response("ok");
