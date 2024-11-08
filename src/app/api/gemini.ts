@@ -81,7 +81,7 @@ The JSON returned must have properties enclosed in double quotes, and avoid extr
 
 - A prompt produces one object equivalent to the JSON structure above
 - The prompt key and resp must always be included
-- The resp key (which is an array) can contain any amount of objects 
+- The resp key (which is an array) can contain any amount of objects needed to communicate effectively.
   conforming to the structure indicated for the resp key as long as the explanation makes sense in sequence.
 - The prompt, resp and text keys are required.
 - The table, bullet_points and image keys are optional. 
@@ -97,6 +97,9 @@ The JSON returned must have properties enclosed in double quotes, and avoid extr
   For example, the "text" field could introduce a concept, which is followed up with "bullet_points" that lists or highlights
   key features. The "table" field then shows classifications of the concept topic, followed by an image which displays a visual 
   representation of the concepts introduced in the "text", "bullet_points" and "table" keys.
+
+- If a header or description text is needed for the table or image keys, use the text key as the header or description 
+  add more objects if more information is being conveyed.
 
 - If any of the optional fields do not adhere to the rules stated above then they should not be added.
 

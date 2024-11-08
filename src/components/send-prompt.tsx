@@ -24,7 +24,6 @@ export default function SendPrompt() {
     },
     onSuccess: (data: { status: boolean; data: GeminiResponse[] }) => {
       queryClient.setQueryData(["/api/gemini"], (olddata: GeminiResponse[]) => {
-        console.log("new data", data);
         const newData = data.data;
         return [...olddata, newData];
       });
@@ -57,7 +56,7 @@ export default function SendPrompt() {
         <button
           className={cn(
             "rounded-full p-1 bg-sky-500",
-            !prompt && mutation.isPending && "opacity-35 cursor-not-allowed"
+            !prompt || (mutation.isPending && "opacity-40 cursor-not-allowed")
           )}
           onClick={() => {
             if (!prompt) {
@@ -67,7 +66,7 @@ export default function SendPrompt() {
 
             setPrompt("");
           }}
-          disabled={!prompt && mutation.isPending}
+          disabled={!prompt || mutation.isPending}
         >
           <SendHorizonal className="stroke-white size-6 mx-auto" />
         </button>

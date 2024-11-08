@@ -171,9 +171,9 @@ export async function PATCH(req: Request) {
     }
 
     if (
-      status !== ORDER_STATUS.COMPLETED ||
-      status !== ORDER_STATUS.FAILED ||
-      status !== ORDER_STATUS.ONGOING ||
+      status !== ORDER_STATUS.COMPLETED &&
+      status !== ORDER_STATUS.FAILED &&
+      status !== ORDER_STATUS.ONGOING &&
       status !== ORDER_STATUS.PENDING
     ) {
       return Response.json(

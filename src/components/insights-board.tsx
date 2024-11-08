@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useRef } from "react";
 import SendPrompt from "./send-prompt";
+import Image from "next/image";
 
 type Resp = {
   text: string;
@@ -51,24 +52,24 @@ export default function InsightsBoard() {
   }, [data]);
 
   const prompt_ui = (data: GeminiResponse[]) => (
-    <section className="flex flex-col gap-7 w-[95%]">
+    <section className="flex flex-col gap-8 w-[95%] ">
       {data.map((dat, i) => {
         return (
-          <div className="space-y-3" key={i}>
+          <div className="gap-4 flex flex-col " key={i}>
             {dat.prompt && (
               <div
-                className="bg-black/70 text-white p-2 whitespace-normal shadow-lg 
+                className="bg-gray-100 text-black p-2 whitespace-normal shadow 
                             font-medium text-base rounded-e-2xl 
                             rounded-s-2xl border border-neutral-200 lg:max-w-[75%] max-w-[85%] 
-                            min-w-56 w-fit"
+                            min-w-56 w-fit self-end"
               >
                 <p>Prompt: {dat.prompt}</p>
               </div>
             )}
 
             <div
-              className="bg-black/80 text-white px-2 py-9 whitespace-normal
-                              shadow-lg font-medium text-base rounded-e-xl rounded-s-xl
+              className="bg-gray-200 text-black px-2 py-9 whitespace-normal
+                              shadow font-medium text-base rounded-e-xl rounded-s-xl
                               lg:max-w-[91%] max-w-[97%] border border-neutral-200 space-y-10"
             >
               {dat.resp.map((da, i) => {
@@ -96,11 +97,11 @@ export default function InsightsBoard() {
                         <Table className="whitespace-nowrap overflow-scroll">
                           <TableCaption>Table</TableCaption>
                           <TableHeader>
-                            <TableRow className="text-white">
+                            <TableRow className="text-black border-black">
                               {da.table.columns.map((d, i) => {
                                 return (
                                   <TableHead
-                                    className="w-[100px] text-white/70"
+                                    className="w-[100px] text-black border-black"
                                     key={i}
                                   >
                                     {d}
@@ -111,7 +112,7 @@ export default function InsightsBoard() {
                           </TableHeader>
                           <TableBody>
                             {da.table.rows.map((d, i) => (
-                              <TableRow key={i}>
+                              <TableRow key={i} className="border-black">
                                 {d.map((e, i) => (
                                   <TableCell className="font-medium" key={i}>
                                     {e}
@@ -121,6 +122,12 @@ export default function InsightsBoard() {
                             ))}
                           </TableBody>
                         </Table>
+                      </div>
+                    )}
+
+                    {da.image && (
+                      <div className="relative ml-5 w-72 h-52">
+                        <Image src={da.image} alt="image_from_gems" fill />
                       </div>
                     )}
                   </div>
@@ -138,10 +145,10 @@ export default function InsightsBoard() {
       <Tabs defaultValue="account" className="w-full mb-10">
         <TabsList className="space-x-5 bg-transparent">
           <TabsTrigger
-            className="data-[state=active]:bg-zinc-300 data-[state=active]:text-black px-7 text-lg"
+            className="data-[state=active]:bg-zinc-300 data-[state=active]:text-black px-4 text-lg"
             value="account"
           >
-            Insights
+            Insights By Gemini
           </TabsTrigger>
         </TabsList>
         <TabsContent ref={contentRef} className="pt-8" value="account">
