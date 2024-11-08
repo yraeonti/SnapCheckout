@@ -25,7 +25,7 @@ const menuGroups = [
     menuItems: [
       {
         icon: <SquareKanban />,
-        label: "Overview",
+        label: "Orders",
         route: "/",
       },
       {

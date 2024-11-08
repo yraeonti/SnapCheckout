@@ -12,7 +12,7 @@ import Link from "next/link";
 export function OrdersHeader() {
   return (
     <div className=" font-workSans">
-      <h2 className="font-bold">Overview</h2>
+      <h2 className="font-bold">Orders</h2>
       <div className="flex justify-between items-center">
         <Breadcrumb>
           <BreadcrumbList>
