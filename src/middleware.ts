@@ -7,7 +7,17 @@ export default clerkMiddleware((auth, request) => {
   if (isProtectedRoute(request)) {
     auth().protect();
   }
-  return NextResponse.next();
+
+  const res = NextResponse.next();
+
+  res.headers.set("Access-Control-Allow-Credentials", "true");
+  res.headers.set("Access-Control-Allow-Origin", "*");
+  res.headers.set("Access-Control-Allow-Methods", "GET,DELETE,PATCH,POST,PUT");
+  res.headers.set(
+    "Access-Control-Allow-Headers",
+    "Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, apiKey"
+  );
+  return res;
 });
 
 export const config = {
