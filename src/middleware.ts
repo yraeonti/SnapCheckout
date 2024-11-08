@@ -15,7 +15,7 @@ export default clerkMiddleware((auth, request) => {
   res.headers.set("Access-Control-Allow-Methods", "GET,DELETE,PATCH,POST,PUT");
   res.headers.set(
     "Access-Control-Allow-Headers",
-    "Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, apiKey"
+    "Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
   );
   return res;
 });
