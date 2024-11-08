@@ -1,5 +1,17 @@
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
+import { genAI, model_flash, receipt_sys_instruction } from "../../gemini";
+import { sendMail } from "../../email";
+
+const model = genAI.getGenerativeModel({
+  model: model_flash,
+  systemInstruction: receipt_sys_instruction,
+  generationConfig: {
+    temperature: 0.4,
+    // topK: 8,
+    // topP: 0.5,
+  },
+});
 
 export async function POST(req: Request) {
   try {
@@ -9,6 +21,8 @@ export async function POST(req: Request) {
 
     if (data && data["status"] == "Completed") {
       const tx_reference = data.transaction_reference;
+
+      const client = data?.received_from?.account_name as string;
 
       console.log("tx_reference", data.transaction_reference);
 
@@ -23,6 +37,9 @@ export async function POST(req: Request) {
         checkout_items_count === 0 ? "COMPLETED" : "PENDING";
 
       let n_exi = true;
+      const two = new Date();
+
+      two.setMinutes(two.getMinutes() + 2);
 
       while (n_exi) {
         const orders = await db.order.findMany({
@@ -33,12 +50,12 @@ export async function POST(req: Request) {
 
         console.log("orders 0000", orders);
 
-        if (orders.length > 0) {
+        if (orders.length > 0 || new Date(two) <= new Date()) {
           n_exi = false;
         }
       }
 
-      await db.order.update({
+      const order = await db.order.update({
         where: {
           tx_reference,
         },
@@ -59,7 +76,29 @@ export async function POST(req: Request) {
             },
           },
         },
+        include: {
+          checkout_items: true,
+        },
       });
+
+      const contents = [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `order: ${JSON.stringify(order)}`,
+            },
+          ],
+        },
+      ];
+
+      const result = await model.generateContent({
+        contents,
+      });
+
+      const template = result.response.text();
+
+      await sendMail(client, template);
     }
 
     return new Response("ok");

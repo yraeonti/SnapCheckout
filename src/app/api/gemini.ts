@@ -109,6 +109,14 @@ The JSON returned must have properties enclosed in double quotes, and avoid extr
   <Provide an introductory analysis of the store and client respectively in individual objects, make it rich, simple and >
 `;
 
+export const receipt_sys_instruction = `You are a receipt generator whose task is to generate a digital receipt
+from an html template and a users order data.
+
+Your job is to simply input the appropriate data into the html template and return the updated template to be sent
+to the customer.
+
+Remove all the irrelevant text or information from the receipt template that is not available in the order data.
+`;
 export const createCacheAndSaveCacheName = async (userId: string) => {
   const [store, clients] = await db.$transaction([
     db.store.findMany({
