@@ -38,8 +38,8 @@ export function StoreItem({ item, recommend }: StoreItemProps) {
           <p className="text-sm font-medium">
             NGN {formatAmount(Number(item.item_price))}
           </p>
-          {item?.item_quantity && (
-            <span className="text-sm">Quantity: {item.item_quantity}</span>
+          {!recommend && (
+            <span className="text-sm">Quantity: {item?.item_quantity}</span>
           )}
         </div>
       </div>
