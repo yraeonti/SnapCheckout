@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
 import { genAI, model_flash, receipt_sys_instruction } from "../../gemini";
-import { sendMail } from "../../email";
+import { sendMail, receipt_template } from "../../email";
 
 const model = genAI.getGenerativeModel({
   model: model_flash,
@@ -82,6 +82,14 @@ export async function POST(req: Request) {
       });
 
       const contents = [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `receipt template: ${receipt_template}`,
+            },
+          ],
+        },
         {
           role: "user",
           parts: [
