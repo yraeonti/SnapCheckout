@@ -42,34 +42,36 @@ export async function POST(req: Request) {
       );
     }
 
-    await db.order.create({
-      data: {
-        tx_reference,
-        checkout_id: checkout_id,
-        checkout_items: {
-          connect: items,
+    await db.$transaction([
+      db.order.create({
+        data: {
+          tx_reference,
+          checkout_id: checkout_id,
+          checkout_items: {
+            connect: items,
+          },
         },
-      },
-    });
+      }),
 
-    await db.checkout.update({
-      where: {
-        id: checkout_id,
-      },
-      data: {
-        payment_status: "ONGOING",
-        items: {
-          updateMany: {
-            where: {
-              id: { in: items.map((it) => it.id) },
-            },
-            data: {
-              tx_reference,
+      db.checkout.update({
+        where: {
+          id: checkout_id,
+        },
+        data: {
+          payment_status: "ONGOING",
+          items: {
+            updateMany: {
+              where: {
+                id: { in: items.map((it) => it.id) },
+              },
+              data: {
+                tx_reference,
+              },
             },
           },
         },
-      },
-    });
+      }),
+    ]);
 
     return new Response("ok");
   } catch (error) {

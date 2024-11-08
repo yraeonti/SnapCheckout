@@ -30,6 +30,8 @@ export default function SendPrompt() {
     },
   });
 
+  const disabled = !prompt || mutation.isPending;
+
   return (
     <>
       <div
@@ -56,7 +58,7 @@ export default function SendPrompt() {
         <button
           className={cn(
             "rounded-full p-1 bg-sky-500",
-            !prompt || (mutation.isPending && "opacity-40 cursor-not-allowed")
+            disabled && "opacity-40 cursor-not-allowed"
           )}
           onClick={() => {
             if (!prompt) {
@@ -66,7 +68,7 @@ export default function SendPrompt() {
 
             setPrompt("");
           }}
-          disabled={!prompt || mutation.isPending}
+          disabled={disabled}
         >
           <SendHorizonal className="stroke-white size-6 mx-auto" />
         </button>

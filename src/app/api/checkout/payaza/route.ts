@@ -19,35 +19,47 @@ export async function POST(req: Request) {
         },
       });
 
-      console.log("count of check items", checkout_items_count);
-
       const payment_status =
         checkout_items_count === 0 ? "COMPLETED" : "PENDING";
 
-      setTimeout(async () => {
-        await db.order.update({
+      let n_exi = true;
+
+      while (n_exi) {
+        const orders = await db.order.findMany({
           where: {
             tx_reference,
           },
-          data: {
-            checkout: {
-              update: {
-                payment_status: payment_status,
-              },
+        });
+
+        console.log("orders 0000", orders);
+
+        if (orders.length > 0) {
+          n_exi = false;
+        }
+      }
+
+      await db.order.update({
+        where: {
+          tx_reference,
+        },
+        data: {
+          checkout: {
+            update: {
+              payment_status: payment_status,
             },
-            checkout_items: {
-              updateMany: {
-                where: {
-                  tx_reference,
-                },
-                data: {
-                  paid: true,
-                },
+          },
+          checkout_items: {
+            updateMany: {
+              where: {
+                tx_reference,
+              },
+              data: {
+                paid: true,
               },
             },
           },
-        });
-      }, 5000);
+        },
+      });
     }
 
     return new Response("ok");
