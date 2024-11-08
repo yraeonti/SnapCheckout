@@ -21,7 +21,8 @@ export async function POST(req: Request) {
 
       console.log("count of check items", checkout_items_count);
 
-      const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
+      const payment_status =
+        checkout_items_count === 0 ? "COMPLETED" : "PENDING";
 
       await db.order.update({
         where: {

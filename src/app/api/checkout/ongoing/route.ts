@@ -4,6 +4,8 @@ export async function POST(req: Request) {
   try {
     const { checkout_id, items, tx_reference } = await req.json();
 
+    console.log("items", items);
+
     if (!Array.isArray(items)) {
       return Response.json(
         {
@@ -40,35 +42,33 @@ export async function POST(req: Request) {
       );
     }
 
-    await db.$transaction(async (tx) => {
-      await tx.order.create({
-        data: {
-          tx_reference,
-          checkout_id: checkout_id,
-          checkout_items: {
-            connect: items,
-          },
+    await db.order.create({
+      data: {
+        tx_reference,
+        checkout_id: checkout_id,
+        checkout_items: {
+          connect: items,
         },
-      });
+      },
+    });
 
-      await tx.checkout.update({
-        where: {
-          id: checkout_id,
-        },
-        data: {
-          payment_status: "ONGOING",
-          items: {
-            updateMany: {
-              where: {
-                id: { in: items.map((it) => it.id) },
-              },
-              data: {
-                tx_reference,
-              },
+    await db.checkout.update({
+      where: {
+        id: checkout_id,
+      },
+      data: {
+        payment_status: "ONGOING",
+        items: {
+          updateMany: {
+            where: {
+              id: { in: items.map((it) => it.id) },
+            },
+            data: {
+              tx_reference,
             },
           },
         },
-      });
+      },
     });
 
     return new Response("ok");
