@@ -79,48 +79,48 @@ export async function GET(req: NextRequest) {
     //   }
     // });
 
-    // const data = await db.order.findMany({
-    //   where: {
-    //     tx_reference: ref,
-    //   },
-    //   include: {
-    //     checkout: true,
-    //   },
-    // });
+    const data = await db.order.findMany({
+      where: {
+        tx_reference: ref,
+      },
+      include: {
+        checkout: true,
+      },
+    });
 
     const tx_reference = ref;
 
-    const checkout_items_count = await db.checkoutItems.count({
-      where: {
-        tx_reference: { not: tx_reference },
-        paid: false,
-      },
-    });
+    // const checkout_items_count = await db.checkoutItems.count({
+    //   where: {
+    //     tx_reference: { not: tx_reference },
+    //     paid: false,
+    //   },
+    // });
 
-    const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
+    // const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
 
-    const data = await db.order.update({
-      where: {
-        tx_reference,
-      },
-      data: {
-        checkout: {
-          update: {
-            payment_status: payment_status,
-          },
-        },
-        checkout_items: {
-          updateMany: {
-            where: {
-              tx_reference,
-            },
-            data: {
-              paid: true,
-            },
-          },
-        },
-      },
-    });
+    // const data = await db.order.update({
+    //   where: {
+    //     tx_reference,
+    //   },
+    //   data: {
+    //     checkout: {
+    //       update: {
+    //         payment_status: payment_status,
+    //       },
+    //     },
+    //     checkout_items: {
+    //       updateMany: {
+    //         where: {
+    //           tx_reference,
+    //         },
+    //         data: {
+    //           paid: true,
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
 
     return Response.json({
       status: true,

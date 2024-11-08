@@ -43,11 +43,11 @@ export async function POST(req: Request) {
     await db.$transaction(async (tx) => {
       await tx.order.create({
         data: {
+          tx_reference,
+          checkout_id: checkout_id,
           checkout_items: {
             connect: items,
           },
-          tx_reference,
-          checkout_id: checkout_id,
         },
       });
 
