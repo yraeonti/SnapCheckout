@@ -38,6 +38,8 @@ export default function CheckoutUI({ data }: { data: Items }) {
 
   const status = data.checkout?.payment_status;
 
+  const [callbackSend, setCallbackSend] = useState(0);
+
   const subtotal =
     (items &&
       items.reduce(
@@ -76,6 +78,11 @@ export default function CheckoutUI({ data }: { data: Items }) {
       console.log("callbackResponse", callbackResponse);
 
       if (callbackResponse.type === "success") {
+        setCallbackSend((prev) => prev + 1);
+
+        if (callbackSend > 0) {
+          return;
+        }
         const res = await fetch("/api/checkout/ongoing", {
           method: "POST",
           headers: {
