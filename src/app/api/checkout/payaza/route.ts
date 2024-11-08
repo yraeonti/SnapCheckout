@@ -10,12 +10,16 @@ export async function POST(req: Request) {
     if (data && data["status"] == "Completed") {
       const tx_reference = data.transaction_reference;
 
+      console.log("tx_reference", data.transaction_reference);
+
       const checkout_items_count = await db.checkoutItems.count({
         where: {
           tx_reference: { not: tx_reference },
           paid: false,
         },
       });
+
+      console.log("count of check items", checkout_items_count);
 
       const payment_status = checkout_items_count > 0 ? "COMPLETED" : "PENDING";
 
