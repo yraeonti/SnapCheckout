@@ -11,7 +11,7 @@ const model = genAI.getGenerativeModel({
   model: model_flash,
   systemInstruction: receipt_sys_instruction,
   generationConfig: {
-    temperature: 0.4,
+    temperature: 0.1,
     // topK: 8,
     // topP: 0.5,
   },
