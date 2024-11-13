@@ -3,6 +3,10 @@ import { NextRequest } from "next/server";
 import { genAI, model_flash, receipt_sys_instruction } from "../../gemini";
 import { sendMail, receipt_template } from "../../email";
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const model = genAI.getGenerativeModel({
   model: model_flash,
   systemInstruction: receipt_sys_instruction,
@@ -21,8 +25,6 @@ export async function POST(req: Request) {
 
     if (data && data["status"] == "Completed") {
       const tx_reference = data.transaction_reference;
-
-      const client = data?.received_from?.account_name as string;
 
       console.log("tx_reference", data.transaction_reference);
 
@@ -49,6 +51,10 @@ export async function POST(req: Request) {
         });
 
         console.log("orders 0000", orders);
+
+        if (!orders) {
+          await delay(3000);
+        }
 
         if (orders.length > 0 || new Date(two) <= new Date()) {
           n_exi = false;
@@ -78,6 +84,15 @@ export async function POST(req: Request) {
         },
         include: {
           checkout_items: true,
+          checkout: {
+            include: {
+              client: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -106,7 +121,9 @@ export async function POST(req: Request) {
 
       const template = result.response.text();
 
-      await sendMail(client, template);
+      const email = order.checkout.client.email;
+
+      await sendMail(email, template);
     }
 
     return new Response("ok");
@@ -145,16 +162,56 @@ export async function GET(req: NextRequest) {
     //   }
     // });
 
-    const data = await db.order.findMany({
+    const order = await db.order.findUnique({
       where: {
         tx_reference: ref,
       },
       include: {
-        checkout: true,
+        checkout_items: true,
+        checkout: {
+          include: {
+            client: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    const tx_reference = ref;
+    if (!order) {
+      return new Response("bad");
+    }
+
+    // const tx_reference = ref;
+
+    const contents = [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `receipt template: ${receipt_template}`,
+          },
+        ],
+      },
+      {
+        role: "user",
+        parts: [
+          {
+            text: `order: ${JSON.stringify(order)}`,
+          },
+        ],
+      },
+    ];
+
+    const result = await model.generateContent({
+      contents,
+    });
+
+    const template = result.response.text();
+
+    await sendMail(order.checkout.client.email, template);
 
     // const checkout_items_count = await db.checkoutItems.count({
     //   where: {
@@ -190,7 +247,7 @@ export async function GET(req: NextRequest) {
 
     return Response.json({
       status: true,
-      data,
+      data: order,
     });
   } catch (error) {
     console.log(error);

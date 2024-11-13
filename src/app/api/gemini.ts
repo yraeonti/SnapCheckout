@@ -109,13 +109,18 @@ The JSON returned must have properties enclosed in double quotes, and avoid extr
   <Provide an introductory analysis of the store and client respectively in individual objects, make it rich, simple and >
 `;
 
-export const receipt_sys_instruction = `You are a receipt generator whose task is to generate a digital receipt
+export const receipt_sys_instruction = `You are a receipt generator whose task is to generate a digital receipt with the appropriate textual values
 from an html template and a users order data.
 
-Your job is to simply input the appropriate data into the html template and return the updated template to be sent
-to the customer.
+- Your job is to substitute values from the order object into the html template. Whenever there is a calculation to be made, please process the calculation and substitute in the finished value.
+- All values to be substituted to the html template should be the actual readable values and not a template engine value.
+- All dates should be in human readable format not ISO format
+- Add the image of the product to the checkout table, add the image header to the table and give the image a fully rounded border and let it align with the rest of the items on the table
+- Shorten the receipt id to a reasonable length
 
-Remove all the irrelevant text or information from the receipt template that is not available in the order data.
+Remove all the irrelevant text or information from the receipt template that cannot be directly substituted with an actual value from the order object.
+
+N.B: The product name is SnapCheckout.
 `;
 export const createCacheAndSaveCacheName = async (userId: string) => {
   const [store, clients] = await db.$transaction([
