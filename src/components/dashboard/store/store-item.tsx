@@ -4,6 +4,7 @@ import { formatAmount } from "@/lib/utils";
 import { IStore } from "@/types/store.dto";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
+import { StoreItemActions } from "./store-item-actions";
 
 interface StoreItemProps {
   item: IStore;
@@ -27,11 +28,7 @@ export function StoreItem({ item, recommend }: StoreItemProps) {
           <h3 className="capitalize font-normal text-gray-900/50">
             {item.item_name}
           </h3>
-          {!recommend && (
-            <Button variant="outline" size="icon" className="h-8 w-8 -mr-2">
-              <MoreVertical className="h-5 w-5 text-gray-500" />
-            </Button>
-          )}
+          {!recommend && <StoreItemActions item_id={item.id} />}
         </div>
 
         <div className="flex items-center justify-between pt-1">

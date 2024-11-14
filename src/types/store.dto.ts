@@ -1,7 +1,7 @@
 export interface IStore {
   id?: string;
   item_name: string;
-  category: string;
+  category: any;
   item_price: string;
   item_quantity?: number;
   image?: string;

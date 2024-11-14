@@ -3,7 +3,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { IStore } from "@/types/store.dto";
-import { addStoreItem, getStoreItems } from "@/services/store-service";
+import {
+  addStoreItem,
+  deleteStoreItem,
+  getStoreItem,
+  getStoreItems,
+} from "@/services/store-service";
 import { useRouter } from "next/navigation";
 
 export const useGetStoreItems = () => {
@@ -34,6 +39,42 @@ export const useStoreMutation = () => {
     onError: (error: any) => {
       toast.error(error?.message);
       console.log(error?.message);
+    },
+  });
+
+  return mutation;
+};
+
+export const useGetStoreItem = (item_id: string) => {
+  return useQuery({
+    queryKey: ["storeItem", item_id],
+    queryFn: () => getStoreItem(item_id),
+  });
+};
+
+export const useDeleteStoreItem = (
+  item_id?: string,
+  closeModal?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await deleteStoreItem(item_id);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["storeItems"],
+      });
+
+      toast.success("Store Item deleted successfully");
+
+      closeModal && closeModal();
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data.message);
+      console.log(error?.response?.data);
     },
   });
 

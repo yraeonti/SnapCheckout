@@ -16,3 +16,15 @@ export const addStoreItem = async (data: FormData) => {
 
   return response.data;
 };
+
+export const getStoreItem = async (item_id: string): Promise<IStore> => {
+  const response = await axios.get(`/api/store/${item_id}`);
+
+  return response.data.data;
+};
+
+export const deleteStoreItem = async (item_id?: string) => {
+  const response = await axios.delete(`/api/store/${item_id}`);
+
+  return response;
+};
