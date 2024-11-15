@@ -165,6 +165,7 @@ export async function GET(req: Request) {
     const data = await db.store.findMany({
       where: {
         user_id: userId,
+        deletedAt: { isSet: false },
       },
       include: {
         category: {

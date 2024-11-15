@@ -97,10 +97,13 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await db.client.delete({
+    await db.client.update({
       where: {
         user_id: userId,
         id,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
 

@@ -113,6 +113,7 @@ export async function PATCH(
       const old_image = await db.store.findUnique({
         where: {
           id,
+          user_id: userId,
         },
         select: {
           image: true,
@@ -143,6 +144,7 @@ export async function PATCH(
     await db.store.update({
       where: {
         id,
+        user_id: userId,
       },
       data: options,
     });
@@ -201,7 +203,9 @@ export async function GET(
 
     const data = await db.store.findUnique({
       where: {
+        user_id: userId,
         id,
+        deletedAt: { isSet: false },
       },
       include: {
         category: {
@@ -264,9 +268,13 @@ export async function DELETE(
       );
     }
 
-    await db.store.delete({
+    await db.store.update({
       where: {
         id,
+        user_id: userId,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
 

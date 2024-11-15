@@ -136,6 +136,7 @@ export async function GET(req: Request) {
     const data = await db.client.findMany({
       where: {
         user_id: userId,
+        deletedAt: { isSet: false },
       },
       include: {
         checkout: {

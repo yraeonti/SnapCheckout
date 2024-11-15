@@ -30,6 +30,8 @@ model Store {
 
   created_at   DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+
+  deletedAt DateTime?
 }
 
 model Category {
@@ -61,6 +63,7 @@ model Client {
 
     created_at   DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
+    deletedAt DateTime?
 }
 
 enum PAYMENT_STATUS {
@@ -79,7 +82,7 @@ model CheckoutItems {
   description String?
   quantity Int
 
-  product Store @relation(fields: [product_id], references: [id]) 
+  product Store @relation(fields: [product_id], references: [id], onDelete: NoAction) 
   product_id String @db.ObjectId
 
   order Order? @relation(fields: [order_id], references: [id])
