@@ -7,6 +7,7 @@ import {
   House,
   ShoppingCart,
   SquareKanban,
+  UserCircle,
   UserCog2,
   Users,
 } from "lucide-react";
@@ -42,6 +43,11 @@ const menuGroups = [
         icon: <ChartScatter />,
         label: "Insights",
         route: "/insights",
+      },
+      {
+        icon: <UserCircle />,
+        label: "Profile",
+        route: "/profile",
       },
     ],
   },
