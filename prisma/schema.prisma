@@ -82,7 +82,7 @@ model CheckoutItems {
   description String?
   quantity Int
 
-  product Store @relation(fields: [product_id], references: [id], onDelete: NoAction) 
+  product Store @relation(fields: [product_id], references: [id]) 
   product_id String @db.ObjectId
 
   order Order? @relation(fields: [order_id], references: [id])

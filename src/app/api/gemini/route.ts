@@ -115,7 +115,7 @@ export async function POST(req: Request) {
       data: res,
     });
   } catch (error: any) {
-    console.log(JSON.stringify(error.message));
+    console.log(error.message);
 
     return Response.json(
       {
