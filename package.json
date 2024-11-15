@@ -36,6 +36,7 @@
     "embla-carousel-react": "^8.3.1",
     "lucide-react": "^0.453.0",
     "mime": "^4.0.4",
+    "motion": "^11.11.17",
     "next": "14.2.15",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.16",
