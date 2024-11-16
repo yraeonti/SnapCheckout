@@ -1,3 +1,4 @@
+"use client";
 import { allowedFileTypes } from "@/static/static";
 import { ORDER_STATUS } from "@prisma/client";
 

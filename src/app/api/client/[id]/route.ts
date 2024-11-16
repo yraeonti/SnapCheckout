@@ -20,7 +20,7 @@ export async function PATCH(
     );
   }
   try {
-    const { email, name, phone } = await req.json();
+    const { email, name, phone, location } = await req.json();
 
     const { id } = await params;
 
@@ -28,6 +28,7 @@ export async function PATCH(
       email,
       name,
       phone,
+      location,
     };
 
     if (!options.email) delete options.email;
@@ -35,6 +36,8 @@ export async function PATCH(
     if (!options.name) delete options.name;
 
     if (!options.phone) delete options.phone;
+
+    if (!options.location) delete options.location;
 
     if (email) {
       if (!validate(email)) {

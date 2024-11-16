@@ -1,29 +1,14 @@
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
-  const { userId } = auth();
-
-  if (!userId) {
-    return Response.json(
-      {
-        status: false,
-        message: "User not authenticated",
-      },
-      {
-        status: 401,
-      }
-    );
-  }
-
   try {
-    const { product_id, quantity, client_id } = await req.json();
+    const { short_link, product_id, quantity } = await req.json();
 
-    if (!product_id || !quantity || !client_id) {
+    if (!short_link || !product_id) {
       return Response.json(
         {
           status: false,
-          message: "product_id, quantity, client_id are required",
+          message: "short_link and product_id required",
         },
         {
           status: 400,
@@ -31,11 +16,11 @@ export async function POST(req: Request) {
       );
     }
 
-    if (typeof quantity !== "number") {
+    if (typeof quantity != "number") {
       return Response.json(
         {
           status: false,
-          message: "quantity is not of type number",
+          message: "provide valid quantity",
         },
         {
           status: 400,
@@ -55,10 +40,21 @@ export async function POST(req: Request) {
       );
     }
 
+    const client = await db.client.findUnique({
+      where: {
+        short_link,
+      },
+    });
+
+    if (!client) {
+      console.log("cleint does not exist");
+      throw new Error("Something went wrong");
+    }
+
     const product = await db.store.findUnique({
       where: {
         id: product_id,
-        user_id: userId,
+        user_id: client.user_id,
       },
     });
 
@@ -98,7 +94,7 @@ export async function POST(req: Request) {
       db.store.update({
         where: {
           id: product_id,
-          user_id: userId,
+          user_id: client.user_id,
         },
         data: {
           item_quantity: {
@@ -109,8 +105,8 @@ export async function POST(req: Request) {
 
       db.checkout.update({
         where: {
-          user_id: userId,
-          client_id,
+          user_id: client.user_id,
+          client_id: client.id,
         },
         data: {
           payment_status: "PENDING",
@@ -124,7 +120,7 @@ export async function POST(req: Request) {
             connect: { id: product_id },
           },
           checkout: {
-            connect: { client_id, user_id: userId },
+            connect: { client_id: client.id, user_id: client.user_id },
           },
         },
       }),
@@ -150,19 +146,6 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const { userId } = auth();
-
-  if (!userId) {
-    return Response.json(
-      {
-        status: false,
-        message: "User not authenticated",
-      },
-      {
-        status: 401,
-      }
-    );
-  }
   try {
     const { checkout_item_id } = await req.json();
 
@@ -182,6 +165,13 @@ export async function DELETE(req: Request) {
       where: {
         id: checkout_item_id,
       },
+      include: {
+        product: {
+          select: {
+            user_id: true,
+          },
+        },
+      },
     });
 
     if (!item) {
@@ -199,7 +189,7 @@ export async function DELETE(req: Request) {
     await db.store.update({
       where: {
         id: item.product_id,
-        user_id: userId,
+        user_id: item.product.user_id,
       },
       data: {
         item_quantity: {
@@ -216,6 +206,62 @@ export async function DELETE(req: Request) {
     return Response.json({
       status: true,
       message: "Product removed from checkout",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return Response.json(
+      {
+        status: false,
+        message: "Something went wrong",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const { short_link, location } = await req.json();
+
+    if (!short_link || !location) {
+      return Response.json(
+        {
+          status: false,
+          message: "only location can be updated",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const client = await db.client.findUnique({
+      where: {
+        short_link,
+      },
+    });
+
+    if (!client) {
+      console.log("no client");
+
+      throw new Error();
+    }
+
+    await db.client.update({
+      where: {
+        short_link,
+      },
+      data: {
+        location,
+      },
+    });
+
+    return Response.json({
+      status: true,
+      message: "location updated",
     });
   } catch (error) {
     console.log(error);

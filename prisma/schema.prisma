@@ -54,6 +54,8 @@ model Client {
     phone String?
     name String?
 
+    location String?
+
     link String @unique
 
     short_link String @unique
@@ -160,4 +162,32 @@ model Insights {
   user_id String @unique
   created_at   DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+}
+
+type SocialLinks {
+  instagram String?
+  twitter String?
+  facebook String?
+}
+
+type AccountDetails {
+  account_name String
+  account_number String
+  bank_name String
+}
+
+type BrandDetails {
+  brand_logo String?
+  brand_name String?
+}
+
+model ProfileSettings {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    social_links SocialLinks?
+    brand_details BrandDetails?
+    account_details BrandDetails?
+    client_link String? @unique
+    user_id String @unique
+    created_at DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

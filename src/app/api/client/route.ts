@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const { email, phone, name } = await req.json();
+    const { email, phone, name, location } = await req.json();
 
     if (!email) {
       return Response.json(
@@ -71,6 +71,7 @@ export async function POST(req: Request) {
       email,
       phone,
       name,
+      location,
       link: hash,
       short_link: short_hash,
       user_id: userId,
@@ -82,6 +83,10 @@ export async function POST(req: Request) {
 
     if (!name) {
       delete options.name;
+    }
+
+    if (!location) {
+      delete options.location;
     }
 
     await db.$transaction(async (tx) => {
