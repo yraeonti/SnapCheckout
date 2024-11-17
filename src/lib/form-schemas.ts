@@ -43,23 +43,17 @@ export const orderStatusSchema = z.object({
 });
 
 export const brandFormSchema = z.object({
-  storeName: z
+  brand_name: z
     .string()
-    .min(2, { message: "Store name must be at least 2 characters" })
-    .max(50, { message: "Store name must be less than 50 characters" }),
-  logo: z
-    .instanceof(FileList)
-    .refine((files) => files.length > 0, "Logo is required")
+    .min(2, { message: "Brand name must be at least 2 characters" })
+    .max(50, { message: "Brand name must be less than 50 characters" }),
+  brand_logo: z
+    .any()
+    .refine((file) => file, "Document is required.")
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
     .refine(
-      (files) => files[0]?.size <= 5 * 1024 * 1024,
-      "Max file size is 5MB"
-    )
-    .refine(
-      (files) =>
-        ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-          files[0]?.type
-        ),
-      "Only .jpg, .jpeg, .png and .webp formats are supported"
+      (file) => allowedFileTypes.includes(file?.type),
+      "Unsupported file type. Allowed types: images, PDF, Excel, and Word documents only."
     ),
 });
 

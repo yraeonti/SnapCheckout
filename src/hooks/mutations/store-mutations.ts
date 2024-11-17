@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { IStore } from "@/types/store.dto";
+
 import {
   addStoreItem,
   deleteStoreItem,

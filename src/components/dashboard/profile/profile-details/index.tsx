@@ -3,19 +3,18 @@ import React, { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
-import { AccountOptions } from "./profile-options";
+
 import { AnimatePresence, motion } from "motion/react";
-
-import Socials from "./socials";
-import BankInformation from "./bank-information";
-import Brand from "./brand";
+import { AccountOptions } from "../complete-profile/profile-options";
 import { IProfileSettings } from "@/types/profile.dto";
+import { AccountInformation } from "./bank-information";
+import { BrandDetails } from "./brand";
+import { SocialLinks } from "./socials";
 
-interface ProfileSettingsProps {
+interface ProfileDetailsProps {
   initialData: IProfileSettings;
 }
-
-export const ProfileSettings = ({ initialData }: ProfileSettingsProps) => {
+export const ProfileDetails = ({ initialData }: ProfileDetailsProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -24,15 +23,22 @@ export const ProfileSettings = ({ initialData }: ProfileSettingsProps) => {
   const settingsOptions = [
     {
       type: "brand",
-      component: <Brand brandDetails={initialData?.brand_details ?? {}} />,
+      component: (
+        <BrandDetails
+          brandDetails={initialData.brand_details}
+          clientLink={initialData.client_link}
+        />
+      ),
     },
     {
       type: "socials",
-      component: <Socials socialLinks={initialData.social_links ?? {}} />,
+      component: <SocialLinks socialLinks={initialData.social_links} />,
     },
     {
       type: "bank",
-      component: <BankInformation />,
+      component: (
+        <AccountInformation accountDetails={initialData?.account_details} />
+      ),
     },
   ];
 
@@ -71,7 +77,7 @@ export const ProfileSettings = ({ initialData }: ProfileSettingsProps) => {
           layout="position"
         >
           <div className="space-y-5">
-            <h1 className="text-xl font-semibold">Account Settings</h1>
+            <h1 className="text-xl font-semibold">Profile Details</h1>
           </div>
           <AccountOptions
             settingsOption={settingsOption}

@@ -16,24 +16,32 @@ import {
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Instagram, Twitter, Facebook } from "lucide-react";
 import { socialsFormSchema } from "@/lib/form-schemas";
+import { ISocialLinks } from "@/types/profile.dto";
+import { useProfileMutation } from "@/hooks/mutations/profile-mutation";
 
-export default function Socials() {
+interface SocialFormProps {
+  socialLinks?: ISocialLinks;
+  closeModal?: () => void;
+}
+export default function Socials({ socialLinks, closeModal }: SocialFormProps) {
+  const { mutate, isPending } = useProfileMutation();
   const form = useForm({
     resolver: zodResolver(socialsFormSchema),
     defaultValues: {
-      instagram: "",
-      twitter: "",
-      facebook: "",
+      instagram: socialLinks?.instagram || "",
+      twitter: socialLinks?.twitter || "",
+      facebook: socialLinks?.facebook || "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof socialsFormSchema>) => {
-    try {
-      console.log("Form values:", values);
-      // Here you would typically send the data to your server
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    const formData = new FormData();
+
+    for (const [key, value] of Object.entries(values)) {
+      formData.append(key, value as any);
     }
+
+    mutate(formData);
   };
 
   const socialFields = [
@@ -89,7 +97,7 @@ export default function Socials() {
             ))}
 
             <div className="flex gap-4">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
                 Save Changes
               </Button>
               <Button
