@@ -108,21 +108,24 @@ export async function PATCH(req: Request) {
       new Date()
     );
 
-    await db.profileSettings.upsert({
+    const link = await db.profileSettings.findUnique({
       where: {
         user_id: userId,
       },
-      create: {
-        client_link: short_hash,
-        user_id: userId,
-      },
-      update: {
-        client_link: short_hash,
-      },
     });
+
+    if (!link?.client_link) {
+      await db.profileSettings.create({
+        data: {
+          client_link: short_hash,
+          user_id: userId,
+        },
+      });
+    }
+
     return Response.json({
       status: true,
-      data: "your client link is updated",
+      data: "client link is created",
     });
   } catch (error) {
     console.log(error);
