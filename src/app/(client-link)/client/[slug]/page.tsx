@@ -15,11 +15,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
   if (!data) {
     return <div>No store found with this link</div>;
   }
-
-  console.log(data);
-
-  // return <div>{JSON.stringify(data, null, 2)}</div>;
-
   return (
     <main className="flex flex-col min-h-full bg-[#F5F5F5]">
       <header className="flex justify-between items-center sm:px-10 px-4 py-6 bg-white">
