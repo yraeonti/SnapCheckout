@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   try {
     const { email, name, location, client_link, phone } = await req.json();
 
-    if (!email || !client_link || !location) {
+    if (!email || !client_link) {
       return Response.json(
         {
           status: false,
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     let client;
 
-    client = db.client.findFirst({
+    client = await db.client.findFirst({
       where: {
         email,
         user_id: user.user_id,
@@ -53,6 +53,8 @@ export async function POST(req: Request) {
     });
 
     if (!client) {
+      console.log("got here");
+
       const { hash, short_hash } = generateHash(
         email,
         user.user_id,
