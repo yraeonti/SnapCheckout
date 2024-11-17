@@ -185,7 +185,7 @@ model ProfileSettings {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     social_links SocialLinks?
     brand_details BrandDetails?
-    account_details BrandDetails?
+    account_details AccountDetails?
     client_link String? @unique
     user_id String @unique
     created_at DateTime @default(now())
