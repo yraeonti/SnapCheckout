@@ -171,9 +171,9 @@ type SocialLinks {
 }
 
 type AccountDetails {
-  account_name String
-  account_number String
-  bank_name String
+  account_name String?
+  account_number String?
+  bank_name String?
 }
 
 type BrandDetails {
