@@ -6,6 +6,8 @@ import {
   updateClient,
   CheckoutItemPayload,
   addCheckoutItem,
+  ClientLinkPayload,
+  getClientLink,
 } from "@/services/clients-service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -93,6 +95,28 @@ export const addCheckoutItemMutation = (closeModal?: () => void) => {
 
       toast.success(`Checkout Item add successful`);
       closeModal && closeModal();
+    },
+    onError: (error: any) => {
+      toast.error(error?.message);
+    },
+  });
+
+  return mutation;
+};
+
+export const useGetClientLink = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (data: ClientLinkPayload) => {
+      const response = await getClientLink(data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      // route origin location to the link
+
+      toast.success(` Item add successful`);
     },
     onError: (error: any) => {
       toast.error(error?.message);

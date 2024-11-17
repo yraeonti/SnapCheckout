@@ -30,6 +30,13 @@ export const clientSchema = z.object({
   name: z.string(),
   phone: z.string(),
 });
+export const clientLinkSchema = z.object({
+  email: z.string().email(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  location: z.string(),
+  client_link: z.string(),
+});
 
 export const checkoutItemSchema = z.object({
   client_id: z.string(),

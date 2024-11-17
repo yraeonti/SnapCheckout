@@ -42,3 +42,16 @@ export const addCheckoutItem = async (data: CheckoutItemPayload) => {
   const response = await axios.post(`/api/checkout/`, data);
   return response;
 };
+
+export type ClientLinkPayload = {
+  email: string;
+  name?: string;
+  phone?: string;
+  location: string;
+  client_link: string;
+};
+
+export const getClientLink = async (data: ClientLinkPayload) => {
+  const response = await axios.post(`/api/client/checkout_link`, data);
+  return response;
+};
