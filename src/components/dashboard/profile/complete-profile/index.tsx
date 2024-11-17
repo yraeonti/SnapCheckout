@@ -32,7 +32,9 @@ export const ProfileSettings = ({ initialData }: ProfileSettingsProps) => {
     },
     {
       type: "bank",
-      component: <BankInformation />,
+      component: (
+        <BankInformation bankInformation={initialData.account_details ?? {}} />
+      ),
     },
   ];
 

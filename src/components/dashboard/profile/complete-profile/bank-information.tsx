@@ -17,43 +17,54 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Building2, User, CreditCard } from "lucide-react";
 import { bankFormSchema } from "@/lib/form-schemas";
+import { IAccountDetails } from "@/types/profile.dto";
+import { useProfileMutation } from "@/hooks/mutations/profile-mutation";
 
-export default function BankInformation() {
+interface BankInformationFormPros {
+  bankInformation?: IAccountDetails;
+  closeModal?: () => void;
+}
+export default function BankInformation({
+  bankInformation,
+  closeModal,
+}: BankInformationFormPros) {
+  const { mutate, isPending } = useProfileMutation(closeModal);
   const form = useForm<z.infer<typeof bankFormSchema>>({
     resolver: zodResolver(bankFormSchema),
     defaultValues: {
-      accountHolderName: "",
-      accountNumber: "",
-      bankName: "",
+      account_name: bankInformation?.account_name || "",
+      account_number: bankInformation?.account_number || "",
+      bank_name: bankInformation?.bank_name || "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof bankFormSchema>) => {
-    try {
-      console.log("Form values:", values);
-      // Here you would typically send the data to your server
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    const formData = new FormData();
+
+    for (const [key, value] of Object.entries(values)) {
+      formData.append(key, value as any);
     }
+
+    mutate(formData);
   };
 
   const bankFields = [
     {
-      name: "accountHolderName" as const,
+      name: "account_name" as const,
       label: "Account Holder Name",
       placeholder: "Enter account holder name",
       description: "Name as it appears on your bank account",
       icon: <User className="h-4 w-4" />,
     },
     {
-      name: "accountNumber" as const,
+      name: "account_number" as const,
       label: "Account Number",
       placeholder: "Enter account number",
       description: "Your bank account number",
       icon: <CreditCard className="h-4 w-4" />,
     },
     {
-      name: "bankName" as const,
+      name: "bank_name" as const,
       label: "Bank Name",
       placeholder: "Enter bank name",
       description: "Name of your banking institution",
@@ -84,7 +95,7 @@ export default function BankInformation() {
                         {...formField}
                         placeholder={field.placeholder}
                         type={
-                          field.name === "accountNumber" ? "number" : "text"
+                          field.name === "account_number" ? "number" : "text"
                         }
                       />
                     </FormControl>
@@ -96,7 +107,7 @@ export default function BankInformation() {
             ))}
 
             <div className="flex gap-4">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
                 Save Changes
               </Button>
               <Button

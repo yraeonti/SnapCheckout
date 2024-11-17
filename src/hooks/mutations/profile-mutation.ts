@@ -15,7 +15,7 @@ export const useGetProfile = () => {
   });
 };
 
-export const useProfileMutation = () => {
+export const useProfileMutation = (closeModal?: () => void) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -34,6 +34,7 @@ export const useProfileMutation = () => {
       });
 
       toast.success(`Profile updated successfully`);
+      closeModal && closeModal();
     },
     onError: (error: any) => {
       toast.error(error?.message);

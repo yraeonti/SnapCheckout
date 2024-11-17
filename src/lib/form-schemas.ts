@@ -88,14 +88,14 @@ export const socialsFormSchema = z.object({
 });
 
 export const bankFormSchema = z.object({
-  accountHolderName: z
+  account_name: z
     .string()
     .min(2, "Account holder name must be at least 2 characters")
     .max(100, "Account holder name must be less than 100 characters"),
-  accountNumber: z
+  account_number: z
     .string()
     .min(8, "Account number must be at least 8 digits")
     .max(20, "Account number must be less than 20 digits")
     .regex(/^\d+$/, "Account number must contain only numbers"),
-  bankName: z.string().min(2, "Bank name must be at least 2 characters"),
+  bank_name: z.string().min(2, "Bank name must be at least 2 characters"),
 });
