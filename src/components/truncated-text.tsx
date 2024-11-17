@@ -2,8 +2,14 @@ import { Copy } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 
-const TruncatedTextCell = ({ text }: { text?: string }) => {
-  const url = `${window.location.origin}/checkout/${text}`;
+const TruncatedTextCell = ({
+  text,
+  route = "/checkout",
+}: {
+  text?: string;
+  route?: string;
+}) => {
+  const url = `${window.location.origin}${route}/${text}`;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url || "");
     toast.success(`${url} copied to clipboard`);

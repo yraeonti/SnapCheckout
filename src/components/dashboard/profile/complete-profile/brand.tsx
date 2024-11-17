@@ -26,7 +26,7 @@ interface BrandFromProps {
 }
 
 export default function Brand({ brandDetails, closeModal }: BrandFromProps) {
-  const { mutate, isPending } = useProfileMutation();
+  const { mutate, isPending } = useProfileMutation(closeModal);
   const docRef = useRef<HTMLInputElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<File | undefined>();
   const form = useForm<z.infer<typeof brandFormSchema>>({

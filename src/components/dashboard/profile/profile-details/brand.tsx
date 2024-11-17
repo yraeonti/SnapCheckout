@@ -1,7 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormModal } from "@/components/modals/form-modal";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { IBrandDetails } from "@/types/profile.dto";
 import { Building2, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import Brand from "../complete-profile/brand";
+import TruncatedTextCell from "@/components/truncated-text";
 
 interface BrandDetailsProps {
   brandDetails?: IBrandDetails | null;
@@ -12,6 +23,7 @@ export const BrandDetails = ({
   brandDetails,
   clientLink,
 }: BrandDetailsProps) => {
+  const [openEdit, setOpenEdit] = useState(false);
   return (
     <div>
       <CardHeader>
@@ -44,18 +56,26 @@ export const BrandDetails = ({
               <Label className="flex items-center gap-2">
                 Client Link <ExternalLink className="h-4 w-4" />
               </Label>
-              <a
-                href={clientLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                {clientLink}
-              </a>
+              <TruncatedTextCell text={clientLink} route="/client" />
             </div>
           )}
         </div>
       </CardContent>
+
+      <CardFooter>
+        <Button onClick={() => setOpenEdit(true)}>Edit Details</Button>
+      </CardFooter>
+
+      <FormModal
+        title="Edit Brand Information"
+        openModal={openEdit}
+        setOpenModal={() => setOpenEdit(false)}
+      >
+        <Brand
+          brandDetails={brandDetails ?? {}}
+          closeModal={() => setOpenEdit(false)}
+        />
+      </FormModal>
     </div>
   );
 };

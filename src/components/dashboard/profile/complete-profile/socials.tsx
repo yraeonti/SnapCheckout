@@ -24,7 +24,7 @@ interface SocialFormProps {
   closeModal?: () => void;
 }
 export default function Socials({ socialLinks, closeModal }: SocialFormProps) {
-  const { mutate, isPending } = useProfileMutation();
+  const { mutate, isPending } = useProfileMutation(closeModal);
   const form = useForm({
     resolver: zodResolver(socialsFormSchema),
     defaultValues: {

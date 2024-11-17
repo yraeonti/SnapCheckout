@@ -1,13 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormModal } from "@/components/modals/form-modal";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ISocialLinks } from "@/types/profile.dto";
 import { Instagram, Twitter, Facebook } from "lucide-react";
+import { useState } from "react";
+import Socials from "../complete-profile/socials";
 
 interface SocialLinksProps {
   socialLinks?: ISocialLinks | null;
 }
 
 export const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
+  const [openEdit, setOpenEdit] = useState(false);
   const socialPlatforms = [
     {
       name: "Instagram",
@@ -47,6 +58,21 @@ export const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
           ))}
         </div>
       </CardContent>
+
+      <CardFooter>
+        <Button onClick={() => setOpenEdit(true)}>Edit Details</Button>
+      </CardFooter>
+
+      <FormModal
+        title="Edit Social Links"
+        openModal={openEdit}
+        setOpenModal={() => setOpenEdit(false)}
+      >
+        <Socials
+          socialLinks={socialLinks ?? {}}
+          closeModal={() => setOpenEdit(false)}
+        />
+      </FormModal>
     </div>
   );
 };
