@@ -17,6 +17,7 @@ export interface IClient {
   short_link?: string;
   user_id?: string;
   checkout?: ICheckout | null;
+  location?: string;
   created_at: Date;
   updatedAt: Date;
 }

@@ -30,6 +30,7 @@ export const ClientForm = ({ closeModal, client }: ClientFormProps) => {
       name: client?.name || "",
       phone: client?.phone || "",
       email: client?.email || "",
+      location: client?.location || "",
     },
   });
 
@@ -108,6 +109,28 @@ export const ClientForm = ({ closeModal, client }: ClientFormProps) => {
                       className="w-full"
                       required
                       placeholder="09134453323"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Client Location </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      name="location"
+                      type="text"
+                      className="w-full"
+                      required
+                      placeholder="5BC, Lekki"
                       disabled={isPending}
                     />
                   </FormControl>

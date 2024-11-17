@@ -29,6 +29,7 @@ export const clientSchema = z.object({
   email: z.string().email(),
   name: z.string(),
   phone: z.string(),
+  location: z.string(),
 });
 export const clientLinkSchema = z.object({
   email: z.string().email(),

@@ -13,6 +13,7 @@ export type ClientPayload = {
   email: string;
   phone: string;
   name: string;
+  location: string;
 };
 export const addClient = async (data: ClientPayload) => {
   const response = await axios.post(`/api/client`, data);
