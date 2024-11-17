@@ -16,3 +16,9 @@ export const updateProfile = async (data: FormData) => {
 
   return response.data;
 };
+
+export const createClientLink = async () => {
+  const response = await axios.patch("/api/profile/client_link");
+
+  return response.data;
+};

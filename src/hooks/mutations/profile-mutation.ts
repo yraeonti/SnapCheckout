@@ -2,7 +2,11 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getProfile, updateProfile } from "@/services/prodfile-service";
+import {
+  createClientLink,
+  getProfile,
+  updateProfile,
+} from "@/services/prodfile-service";
 
 export const useGetProfile = () => {
   return useQuery({
@@ -17,7 +21,12 @@ export const useProfileMutation = () => {
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
       const response = await updateProfile(data);
-      return response.data;
+      const clientLinkResponse = await createClientLink();
+
+      return {
+        profile: response.data,
+        clientLink: clientLinkResponse,
+      };
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
