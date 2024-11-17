@@ -115,10 +115,16 @@ export async function PATCH(req: Request) {
     });
 
     if (!link?.client_link) {
-      await db.profileSettings.create({
-        data: {
+      await db.profileSettings.upsert({
+        where: {
+          user_id: userId,
+        },
+        create: {
           client_link: short_hash,
           user_id: userId,
+        },
+        update: {
+          client_link: short_hash,
         },
       });
     }
