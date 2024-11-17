@@ -33,9 +33,9 @@ export const useProfileCompletion = (): UseProfileCompletionReturn => {
     }
 
     // Check social links
-    if (!profile.social_links) {
-      missingFields.push("Social Links");
-    }
+    // if (!profile.social_links) {
+    //   missingFields.push("Social Links");
+    // }
 
     // Check client link
     if (!profile.client_link) {
