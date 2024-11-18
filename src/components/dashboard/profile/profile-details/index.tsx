@@ -10,6 +10,7 @@ import { IProfileSettings } from "@/types/profile.dto";
 import { AccountInformation } from "./bank-information";
 import { BrandDetails } from "./brand";
 import { SocialLinks } from "./socials";
+//
 
 interface ProfileDetailsProps {
   initialData: IProfileSettings;
