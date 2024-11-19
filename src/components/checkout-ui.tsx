@@ -214,7 +214,7 @@ export default function CheckoutUI({
               <MapPin className="stroke-green-500" />
 
               <div className="flex  items-center gap-4 truncate whitespace-nowrap">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <p className="">Delivery Address:</p>{" "}
                   {editLocation ? (
                     <div className="min-w-56">
