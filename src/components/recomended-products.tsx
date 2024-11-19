@@ -20,7 +20,7 @@ export default function RecommendedProducts({ slug }: { slug: string }) {
 
   return (
     <>
-      <h4 className="text-2xl font-medium my-4">Other Products</h4>
+      <h4 className="text-xl font-medium my-4">Recommended Products</h4>
       <Carousel className="w-full">
         {/* <CarouselContent className="">
             {

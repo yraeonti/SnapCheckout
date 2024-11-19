@@ -17,6 +17,10 @@ import { ConnectionMode } from "payaza-web-sdk/lib/PayazaCheckout";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MapPin, Pencil, Trash2Icon, User } from "lucide-react";
+import Image from "next/image";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 type Items = Client & {
   checkout: (Checkout & { items: CheckoutItems[] | null }) | null;
 };
@@ -33,12 +37,28 @@ class Payaza extends PayazaCheckout {
   }
 }
 
-export default function CheckoutUI({ data }: { data: Items }) {
+export default function CheckoutUI({
+  data,
+  short_link,
+}: {
+  data: Items;
+  short_link: string;
+}) {
   const items = data.checkout?.items && data.checkout.items;
 
   const status = data.checkout?.payment_status;
 
   const [callbackSend, setCallbackSend] = useState(0);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [editLocation, setEditLocation] = useState(false);
+
+  const [curDel, setCurDel] = useState("");
+
+  const [address, setAddress] = useState("");
 
   const subtotal =
     (items &&
@@ -102,6 +122,44 @@ export default function CheckoutUI({ data }: { data: Items }) {
     },
   });
 
+  const handleDeleteCheckout = async (checkout_item_id: string) => {
+    setIsDeleting(true);
+    setCurDel(checkout_item_id);
+    await fetch("/api/client/checkout", {
+      method: "DELETE",
+      body: JSON.stringify({
+        checkout_item_id,
+      }),
+    });
+
+    router.refresh();
+
+    setTimeout(() => {
+      setIsDeleting(false);
+    }, 900);
+  };
+
+  const handleEditAddress = async (
+    checkout_item_id: string,
+    address: string
+  ) => {
+    setIsEditing(true);
+    setCurDel(checkout_item_id);
+    await fetch("/api/client/checkout", {
+      method: "PATCH",
+      body: JSON.stringify({
+        short_link,
+        location: address,
+      }),
+    });
+
+    router.refresh();
+
+    setTimeout(() => {
+      setIsEditing(false);
+      setEditLocation(false);
+    }, 900);
+  };
   return (
     <div className="">
       <h1 className="text-base text-[#F3A847] py-4">Checkout</h1>
@@ -129,40 +187,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
           <Separator className="my-5" />
 
           <div className="flex items-center gap-4">
-            <svg
-              width="52"
-              height="52"
-              viewBox="0 0 52 52"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g opacity="0.8">
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width="47"
-                  height="47"
-                  rx="7.5"
-                  fill="#E6F8ED"
-                />
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width="47"
-                  height="47"
-                  rx="7.5"
-                  stroke="#B0EAC7"
-                />
-                <path
-                  d="M31.4308 26.6289C31.5472 26.6981 31.6908 26.7792 31.8535 26.871C32.5663 27.2731 33.6438 27.881 34.382 28.6035C34.8437 29.0554 35.2823 29.6509 35.3621 30.3805C35.4469 31.1563 35.1084 31.8843 34.4294 32.5312C33.2579 33.6473 31.8521 34.5417 30.0338 34.5417H21.2156C19.3972 34.5417 17.9915 33.6473 16.82 32.5312C16.141 31.8843 15.8025 31.1563 15.8873 30.3805C15.9671 29.6509 16.4057 29.0554 16.8674 28.6035C17.6056 27.881 18.6831 27.2731 19.3959 26.871C19.5586 26.7792 19.7022 26.6981 19.8186 26.6289C23.3726 24.5126 27.8768 24.5126 31.4308 26.6289Z"
-                  fill="#008D38"
-                />
-                <path
-                  d="M19.6248 20.2916C19.6248 17.3921 21.9753 15.0416 24.8747 15.0416C27.7742 15.0416 30.1247 17.3921 30.1247 20.2916C30.1247 23.1911 27.7742 25.5416 24.8747 25.5416C21.9753 25.5416 19.6248 23.1911 19.6248 20.2916Z"
-                  fill="#008D38"
-                />
-              </g>
-            </svg>
+            <User className="stroke-green-500" />
 
             <div className="text-[#626262] text-sm overflow-hidden">
               {data.name && (
@@ -182,6 +207,62 @@ export default function CheckoutUI({ data }: { data: Items }) {
                   <p>Phone Number:</p> <p>{data.phone}</p>
                 </div>
               )} */}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 mt-4 text-sm ">
+            <MapPin className="stroke-green-500" />
+
+            <div className="flex  items-center gap-4 truncate whitespace-nowrap">
+              <div className="flex items-center gap-2">
+                <p className="">Delivery Address:</p>{" "}
+                {editLocation ? (
+                  <div className="min-w-56">
+                    <Input
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="w-full outline-none focus-visible:ring-0"
+                      placeholder="Enter Address"
+                    />
+                    <div className="flex items-center justify-end gap-4 mt-4">
+                      <Button
+                        className=""
+                        onClick={() => setEditLocation(false)}
+                      >
+                        Cancel
+                      </Button>
+
+                      {isEditing ? (
+                        <Image
+                          src="/rhombus.gif"
+                          alt="rhombus"
+                          height={30}
+                          width={30}
+                        />
+                      ) : (
+                        <Button
+                          className="bg-[#F3A847] hover:bg-[#F3A847]"
+                          onClick={() => handleEditAddress(short_link, address)}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <p>{data?.location || "N/A"}</p>
+                )}
+              </div>
+              {!editLocation && (
+                <div
+                  className="rounded-full p-[0.3rem] bg-[#F3A847] cursor-pointer"
+                  onClick={() => {
+                    setEditLocation(true);
+                  }}
+                >
+                  <Pencil className="size-4 stroke-white " />
+                </div>
+              )}
             </div>
           </div>
 
@@ -247,6 +328,7 @@ export default function CheckoutUI({ data }: { data: Items }) {
                   </TableHead>
                   <TableHead className="text-center">Quantity</TableHead>
                   <TableHead className="text-center">Price</TableHead>
+                  <TableHead className="text-right"></TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -269,7 +351,25 @@ export default function CheckoutUI({ data }: { data: Items }) {
                           {it.quantity}
                         </TableCell>
                         <TableCell className="text-center text-sm whitespace-nowrap">
-                          N {`${it.item_price}`}
+                          NGN {`${it.item_price}`}
+                        </TableCell>
+
+                        <TableCell className=" text-sm whitespace-nowrap ">
+                          {isDeleting && it.id == curDel ? (
+                            <Image
+                              src="/rhombus.gif"
+                              alt="rhombus"
+                              height={30}
+                              width={30}
+                            />
+                          ) : (
+                            <>
+                              <Trash2Icon
+                                className="stroke-red-600 cursor-pointer"
+                                onClick={() => handleDeleteCheckout(it.id)}
+                              />
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
                     );

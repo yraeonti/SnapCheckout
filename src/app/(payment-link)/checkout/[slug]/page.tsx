@@ -2,6 +2,7 @@ import CheckoutUI from "@/components/checkout-ui";
 import { db } from "@/lib/db";
 import Image from "next/image";
 import RecommendedProducts from "@/components/recomended-products";
+import StoreItems from "@/components/client-store-items";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -18,6 +19,20 @@ export default async function Page({ params }: { params: { slug: string } }) {
               paid: false,
             },
           },
+        },
+      },
+    },
+  });
+
+  const storeData = await db.store.findMany({
+    where: {
+      user_id: data?.user_id,
+      item_quantity: { gt: 0 },
+    },
+    include: {
+      category: {
+        select: {
+          category: true,
         },
       },
     },
@@ -55,7 +70,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
       </header>
 
       <section className="sm:px-10 px-4 pb-10 mb-10">
-        <CheckoutUI data={data} />
+        <CheckoutUI data={data} short_link={slug} />
+
+        <section className="mt-10">
+          <StoreItems data={storeData} short_link={slug} />
+        </section>
 
         <section className="mt-10 relative">
           <RecommendedProducts slug={slug} />

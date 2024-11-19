@@ -24,7 +24,7 @@ Given a purchase history, which will be indicated in the prompt: History: "objec
 the store products: Store: "object"
 
 You must provide a JSON response containing product recommendations
-with the same fields as the store object except: id, quantity, user_id, category_id.
+with the same fields as the store object except: user_id, category_id.
 
 Return the json data of recommended products in a data array
 Fro example: {
