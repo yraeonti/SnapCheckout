@@ -209,62 +209,65 @@ export default function CheckoutUI({
               )} */}
             </div>
           </div>
+          {items && items?.length > 0 && (
+            <div className="flex items-center gap-4 mt-4 text-sm ">
+              <MapPin className="stroke-green-500" />
 
-          <div className="flex items-center gap-4 mt-4 text-sm ">
-            <MapPin className="stroke-green-500" />
-
-            <div className="flex  items-center gap-4 truncate whitespace-nowrap">
-              <div className="flex items-center gap-2">
-                <p className="">Delivery Address:</p>{" "}
-                {editLocation ? (
-                  <div className="min-w-56">
-                    <Input
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      className="w-full outline-none focus-visible:ring-0"
-                      placeholder="Enter Address"
-                    />
-                    <div className="flex items-center justify-end gap-4 mt-4">
-                      <Button
-                        className=""
-                        onClick={() => setEditLocation(false)}
-                      >
-                        Cancel
-                      </Button>
-
-                      {isEditing ? (
-                        <Image
-                          src="/rhombus.gif"
-                          alt="rhombus"
-                          height={30}
-                          width={30}
-                        />
-                      ) : (
+              <div className="flex  items-center gap-4 truncate whitespace-nowrap">
+                <div className="flex items-center gap-2">
+                  <p className="">Delivery Address:</p>{" "}
+                  {editLocation ? (
+                    <div className="min-w-56">
+                      <Input
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="w-full outline-none focus-visible:ring-0"
+                        placeholder="Enter Address"
+                      />
+                      <div className="flex items-center justify-end gap-4 mt-4">
                         <Button
-                          className="bg-[#F3A847] hover:bg-[#F3A847]"
-                          onClick={() => handleEditAddress(short_link, address)}
+                          className=""
+                          onClick={() => setEditLocation(false)}
                         >
-                          Edit
+                          Cancel
                         </Button>
-                      )}
+
+                        {isEditing ? (
+                          <Image
+                            src="/rhombus.gif"
+                            alt="rhombus"
+                            height={30}
+                            width={30}
+                          />
+                        ) : (
+                          <Button
+                            className="bg-[#F3A847] hover:bg-[#F3A847]"
+                            onClick={() =>
+                              handleEditAddress(short_link, address)
+                            }
+                          >
+                            Edit
+                          </Button>
+                        )}
+                      </div>
                     </div>
+                  ) : (
+                    <p>{data?.location || "N/A"}</p>
+                  )}
+                </div>
+                {!editLocation && (
+                  <div
+                    className="rounded-full p-[0.3rem] bg-[#F3A847] cursor-pointer"
+                    onClick={() => {
+                      setEditLocation(true);
+                    }}
+                  >
+                    <Pencil className="size-4 stroke-white " />
                   </div>
-                ) : (
-                  <p>{data?.location || "N/A"}</p>
                 )}
               </div>
-              {!editLocation && (
-                <div
-                  className="rounded-full p-[0.3rem] bg-[#F3A847] cursor-pointer"
-                  onClick={() => {
-                    setEditLocation(true);
-                  }}
-                >
-                  <Pencil className="size-4 stroke-white " />
-                </div>
-              )}
             </div>
-          </div>
+          )}
 
           {/* <div className="space-y-2">
             <h1 className="font-semibold text-[18px] font-workSans">
