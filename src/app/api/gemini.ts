@@ -106,7 +106,7 @@ The JSON returned must have properties enclosed in double quotes, and avoid extr
 - Any dates returned from your response must be of human readable form.
 
 - If a propmt contains only the string "start" return in the prompt key "start" but analyse the data according to this query: 
-  <Provide an introductory analysis of the store and client respectively in individual objects, make it rich, simple and >
+  <Provide an introductory analysis of the store and client respectively in individual objects, make it rich, simple and eloquent>
 `;
 
 export const receipt_sys_instruction = `You are a receipt generator whose task is to generate a digital receipt with the appropriate textual values
