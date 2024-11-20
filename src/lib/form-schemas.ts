@@ -107,3 +107,32 @@ export const bankFormSchema = z.object({
     .regex(/^\d+$/, "Account number must contain only numbers"),
   bank_name: z.string().min(2, "Bank name must be at least 2 characters"),
 });
+
+export const KYBFormSchema = z.object({
+  businessName: z
+    .string()
+    .min(2, "Business name must have at least 2 characters.")
+    .max(100, "Business name must not exceed 100 characters.")
+    .nonempty("Business name is required."),
+  businessRN: z
+    .string()
+    .regex(
+      /^[A-Za-z0-9-]+$/,
+      "Business RN can only contain letters, numbers, and hyphens."
+    )
+    .nonempty("Business registration number (RN) is required."),
+  cacRegDocument: z
+    .instanceof(File)
+    .refine(
+      (file) => file.size > 0,
+      "CAC registration document file cannot be empty."
+    ),
+  utilityBill: z
+    .instanceof(File)
+    .refine((file) => file.size > 0, "Utility bill file cannot be empty."),
+  houseAddress: z
+    .string()
+    .min(5, "House address must have at least 5 characters.")
+    .max(255, "House address must not exceed 255 characters.")
+    .nonempty("House address is required."),
+});
