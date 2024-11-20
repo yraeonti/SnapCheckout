@@ -28,6 +28,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     where: {
       user_id: data?.user_id,
       item_quantity: { gt: 0 },
+      deletedAt: { isSet: false },
     },
     include: {
       category: {
