@@ -20,7 +20,7 @@ interface BrandDetailsProps {
   clientLink?: string | null;
 }
 
-const route = "/checkout";
+const route = "/client";
 
 export const BrandDetails = ({
   brandDetails,
