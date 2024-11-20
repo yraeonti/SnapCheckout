@@ -122,13 +122,13 @@ export const KYBFormSchema = z.object({
     )
     .nonempty("Business registration number (RN) is required."),
   cacRegDocument: z
-    .instanceof(File)
+    .any()
     .refine(
       (file) => file.size > 0,
       "CAC registration document file cannot be empty."
     ),
   utilityBill: z
-    .instanceof(File)
+    .any()
     .refine((file) => file.size > 0, "Utility bill file cannot be empty."),
   houseAddress: z
     .string()
