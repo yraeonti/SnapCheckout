@@ -24,7 +24,7 @@ export default function QrCodeLink({ link }: { link: string }) {
         <div className="mt-4 flex justify-center bg-white">
           <QRCodeSVG
             value={link}
-            size={220}
+            size={280}
             level={"Q"}
             marginSize={2}
             imageSettings={{
