@@ -42,6 +42,7 @@
     "nodemailer": "^6.9.16",
     "payaza-web-sdk": "^1.0.4",
     "prisma": "^5.21.1",
+    "qrcode.react": "^4.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",

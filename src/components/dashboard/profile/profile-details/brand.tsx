@@ -9,21 +9,26 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { IBrandDetails } from "@/types/profile.dto";
-import { Building2, ExternalLink } from "lucide-react";
+import { Building2, ExternalLink, QrCode } from "lucide-react";
 import { useState } from "react";
 import Brand from "../complete-profile/brand";
 import TruncatedTextCell from "@/components/truncated-text";
+import QrCodeLink from "../../qr-code";
 
 interface BrandDetailsProps {
   brandDetails?: IBrandDetails | null;
   clientLink?: string | null;
 }
 
+const route = "/checkout";
+
 export const BrandDetails = ({
   brandDetails,
   clientLink,
 }: BrandDetailsProps) => {
   const [openEdit, setOpenEdit] = useState(false);
+
+  const url = `${window.location.origin}${route}/${clientLink}`;
   return (
     <div>
       <CardHeader>
@@ -54,9 +59,14 @@ export const BrandDetails = ({
           {clientLink && (
             <div>
               <Label className="flex items-center gap-2">
-                Client Link <ExternalLink className="h-4 w-4" />
+                Client Link{" "}
+                <div className="flex items-center gap-3">
+                  {" "}
+                  <ExternalLink className="h-4 w-4" /> <QrCodeLink link={url} />
+                </div>
               </Label>
-              <TruncatedTextCell text={clientLink} route="/client" />
+
+              <TruncatedTextCell text={clientLink} route={route} />
             </div>
           )}
         </div>
