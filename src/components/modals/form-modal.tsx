@@ -21,7 +21,10 @@ export const FormModal = ({
 }: FormModalProps) => {
   return (
     <Dialog open={openModal} onOpenChange={() => setOpenModal(false)}>
-      <DialogContent className="px-0 sm:max-w-lg" aria-labelledby="">
+      <DialogContent
+        className="px-0 overflow-auto overflow-y-scroll max-h-[80vh] sm:max-w-xl"
+        aria-labelledby=""
+      >
         <DialogHeader className="space-y-0 px-4 text-left">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription></DialogDescription>

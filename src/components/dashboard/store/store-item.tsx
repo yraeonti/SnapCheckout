@@ -67,7 +67,7 @@ export function StoreItem({ item, recommend, short_link }: StoreItemProps) {
           <h3 className="capitalize font-normal text-gray-900/50">
             {item.item_name}
           </h3>
-          {!recommend && <StoreItemActions item_id={item.id} />}
+          {!recommend && <StoreItemActions item_id={item.id} item={item} />}
         </div>
 
         <div className="flex items-center justify-between pt-1">

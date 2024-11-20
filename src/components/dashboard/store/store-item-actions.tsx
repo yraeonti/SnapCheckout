@@ -13,14 +13,17 @@ import { useState } from "react";
 import { StoreItemDetail } from "./store-item-datail";
 import { useDeleteStoreItem } from "@/hooks/mutations/store-mutations";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import { ItemForm } from "./add-item/item-form";
 
 type StoreItemActionProps = {
   item_id?: string;
+  item?: IStore;
 };
 
-export const StoreItemActions = ({ item_id }: StoreItemActionProps) => {
+export const StoreItemActions = ({ item_id, item }: StoreItemActionProps) => {
   const [viewItem, setViewItem] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   const { mutate: deleteStoreItem, isPending } = useDeleteStoreItem(item_id);
   return (
@@ -40,7 +43,10 @@ export const StoreItemActions = ({ item_id }: StoreItemActionProps) => {
             <EyeIcon className="ml-2 w-4 h-4" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer flex items-center justify-between">
+          <DropdownMenuItem
+            className="cursor-pointer flex items-center justify-between"
+            onClick={() => setOpenEditModal(true)}
+          >
             Edit Item
             <Edit className="ml-2 w-4 h-4" />
           </DropdownMenuItem>
@@ -57,6 +63,13 @@ export const StoreItemActions = ({ item_id }: StoreItemActionProps) => {
 
       <FormModal title="Item" openModal={viewItem} setOpenModal={setViewItem}>
         <StoreItemDetail item_id={item_id ?? ""} />
+      </FormModal>
+      <FormModal
+        title="Edit Item"
+        openModal={openEditModal}
+        setOpenModal={setOpenEditModal}
+      >
+        <ItemForm item={item} isModal />
       </FormModal>
 
       <ConfirmModal

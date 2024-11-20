@@ -14,7 +14,11 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export function AddItemHeader() {
+interface AddItemHeaderProps {
+  title?: string;
+}
+
+export function AddItemHeader({ title = "Add Item" }: AddItemHeaderProps) {
   const [openModal, setOpenModal] = useState(false);
   return (
     <div className=" font-workSans">
@@ -37,7 +41,7 @@ export function AddItemHeader() {
 
             <BreadcrumbItem>
               <BreadcrumbPage className="text-[#F3A847] font-workSans font-bold">
-                Add Item
+                {title}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>

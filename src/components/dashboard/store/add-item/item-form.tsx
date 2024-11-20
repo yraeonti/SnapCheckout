@@ -28,8 +28,15 @@ import {
 } from "@/components/ui/select";
 import { useGetCategories } from "@/hooks/mutations/category-mutations";
 import { useStoreMutation } from "@/hooks/mutations/store-mutations";
+import { cn } from "@/lib/utils";
 
-export const ItemForm = ({ item }: { item?: IStore }) => {
+export const ItemForm = ({
+  item,
+  isModal = false,
+}: {
+  item?: IStore;
+  isModal?: boolean;
+}) => {
   const { data: categories, isLoading } = useGetCategories();
   const { mutate, isPending } = useStoreMutation();
   const docRef = useRef<HTMLInputElement>(null);
@@ -40,7 +47,7 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
     defaultValues: {
       item_name: item?.item_name || "",
       description: item?.description || "",
-      item_price: item?.item_price || "",
+      item_price: item?.item_price || "0",
       item_quantity: item?.item_quantity || 0,
       image: item?.image || undefined,
     },
@@ -52,6 +59,7 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
   };
 
   const onSubmit = async (data: z.infer<typeof storeItemSchema>) => {
+    const item_id = item?.id;
     const formData = new FormData();
 
     // Append all form fields to FormData
@@ -66,12 +74,12 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
       formData.append("image", selectedDoc);
     }
 
-    // If editing, append the ID
-    // if (item?.id) {
-    //   formData.append("id", item.id);
-    // }
+    if (item_id) {
+      formData.append("item_id", item_id);
+    }
 
     // Send the FormData through the mutation
+
     mutate(formData);
   };
 
@@ -82,7 +90,14 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
         noValidate
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col lg:flex-row justify-between w-full gap-12">
+        <div
+          className={cn(
+            " justify-between w-full gap-12",
+            isModal
+              ? " flex flex-col overflow-y-auto"
+              : "flex flex-col lg:flex-row"
+          )}
+        >
           <div className="w-full space-y-4 p-4 border rounded-lg">
             <FormField
               control={form.control}
@@ -115,7 +130,7 @@ export const ItemForm = ({ item }: { item?: IStore }) => {
                     <Input
                       {...field}
                       name="1000"
-                      type="string"
+                      type="number"
                       className="w-full"
                       required
                       placeholder="Price"

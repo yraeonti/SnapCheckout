@@ -18,14 +18,22 @@ export const useGetStoreItems = () => {
   });
 };
 
-export const useStoreMutation = () => {
+export const useStoreMutation = (id?: string) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
+      // if(id) {
+      //   const response = await updateStoreItem(id, data);
+      //   return response.data;
+
+      // }else {
+
       const response = await addStoreItem(data);
       return response.data;
+
+      // }
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({

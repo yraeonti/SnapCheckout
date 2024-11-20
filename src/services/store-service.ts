@@ -17,6 +17,16 @@ export const addStoreItem = async (data: FormData) => {
   return response.data;
 };
 
+export const updateStoreItem = async (item_id?: string, data?: FormData) => {
+  const response = await axios.patch(`/api/store/${item_id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response;
+};
+
 export const getStoreItem = async (item_id: string): Promise<IStore> => {
   const response = await axios.get(`/api/store/${item_id}`);
 
