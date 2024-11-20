@@ -148,7 +148,7 @@ export default function InsightsBoard() {
             className="data-[state=active]:bg-zinc-300 data-[state=active]:text-black px-4 text-lg"
             value="account"
           >
-            Insights By Gemini
+            Talk To Majeed
           </TabsTrigger>
         </TabsList>
         <TabsContent ref={contentRef} className="pt-8" value="account">
