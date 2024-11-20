@@ -10,7 +10,7 @@ import { IProfileSettings } from "@/types/profile.dto";
 import { AccountInformation } from "./bank-information";
 import { BrandDetails } from "./brand";
 import { SocialLinks } from "./socials";
-//
+import { BusinessVerification } from "./verification";
 
 interface ProfileDetailsProps {
   initialData: IProfileSettings;
@@ -19,7 +19,7 @@ export const ProfileDetails = ({ initialData }: ProfileDetailsProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const options = ["Brand", "Socials", "Bank"];
+  const options = ["Brand", "Socials", "Bank", "Verification"];
 
   const settingsOptions = [
     {
@@ -40,6 +40,10 @@ export const ProfileDetails = ({ initialData }: ProfileDetailsProps) => {
       component: (
         <AccountInformation accountDetails={initialData?.account_details} />
       ),
+    },
+    {
+      type: "verification",
+      component: <BusinessVerification />,
     },
   ];
 
