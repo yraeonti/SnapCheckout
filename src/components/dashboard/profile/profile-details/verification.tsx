@@ -44,7 +44,7 @@ export const BusinessVerification = () => {
       </CardHeader>
       <CardContent>
         We will verify your brand information and and give you a verified tag.
-        <VerifiedIcon className="text-[#d3881e33] font-bold" />
+        <VerifiedIcon className=" font-bold fill-black text-white" />
       </CardContent>
 
       <CardFooter>

@@ -1,5 +1,11 @@
 import React from "react";
-import { Facebook, Instagram, Store, Twitter } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Store,
+  Twitter,
+  VerifiedIcon,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -16,10 +22,13 @@ export const MerchantProfileCard = ({ profile }: MerchantProfileCardProps) => {
   return (
     <Card className="mx-auto max-w-md w-full shadow-none">
       <CardHeader className="flex flex-col items-center space-y-2 pb-3">
-        <h2 className="text-xl font-bold flex text-[#f4b05d]">
-          <Store className="" />
-          {data?.brand_details?.brand_name || ""}
-        </h2>
+        <div className="flex space-x-2">
+          <h2 className="text-xl font-bold flex text-[#f4b05d]">
+            <Store className="" />
+            {data?.brand_details?.brand_name || ""}
+          </h2>
+          <VerifiedIcon className=" font-bold fill-black text-white" />
+        </div>
         <div className="relative w-24 h-24 rounded-full overflow-hidden">
           <img
             src={data?.brand_details?.brand_logo || "/logo.png"}
