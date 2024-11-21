@@ -140,16 +140,27 @@ export default function InsightsBoard() {
     </section>
   );
 
+  const handleClick = async () => {
+    await fetch("/api/gemini/start");
+  };
+
   return (
     <>
       <Tabs defaultValue="account" className="w-full mb-10">
-        <TabsList className="space-x-5 bg-transparent">
+        <TabsList className="space-x-5 bg-transparent flex items-center justify-between">
           <TabsTrigger
             className="data-[state=active]:bg-zinc-300 data-[state=active]:text-black px-4 text-lg"
             value="account"
           >
             Talk To Majeed
           </TabsTrigger>
+
+          <div
+            onClick={handleClick}
+            className="p-2 border border-neutral-200 rounded-md"
+          >
+            Load
+          </div>
         </TabsList>
         <TabsContent ref={contentRef} className="pt-8" value="account">
           {isLoading && !data ? (
