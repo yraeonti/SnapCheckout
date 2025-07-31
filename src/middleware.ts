@@ -7,19 +7,9 @@ export default clerkMiddleware((auth, request) => {
   if (isProtectedRoute(request)) {
     auth().protect();
   }
-
-  const res = NextResponse.next();
-
-  res.headers.set("Access-Control-Allow-Credentials", "true");
-  res.headers.set("Access-Control-Allow-Origin", "*");
-  res.headers.set("Access-Control-Allow-Methods", "GET,DELETE,PATCH,POST,PUT");
-  res.headers.set(
-    "Access-Control-Allow-Headers",
-    "Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date"
-  );
-  return res;
+  return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/((?!.+.[w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
